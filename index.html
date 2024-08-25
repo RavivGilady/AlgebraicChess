@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <style>
+      body { margin: 0; padding-bottom: 3rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+
+      #form { background: rgba(0, 0, 0, 0.15); padding: 0.25rem; position: fixed; bottom: 0; left: 0; right: 0; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
+      #input { border: none; padding: 0 1rem; flex-grow: 1; border-radius: 2rem; margin: 0.25rem; }
+      #input:focus { outline: none; }
+      #form > button { background: #333; border: none; padding: 0 1rem; margin: 0.25rem; border-radius: 3px; outline: none; color: #fff; }
+
+      #messages { list-style-type: none; margin: 0; padding: 0; }
+      #messages > li { padding: 0.5rem 1rem; }
+      #messages > li:nth-child(odd) { background: #efefef; }
+      
+      #toaster {
+    display: none;
+    position: fixed;
+    bottom: 60px; /* Adjusts the toaster above the input line */
+    left: 10px;
+    right: 10px;
+    background-color: red;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    z-index: 1000;
+    max-width: calc(100% - 20px); /* Ensures the toaster doesn't exceed screen width */
+}
+    </style>
+  </head>
+  <body>
+    <ul id="messages"></ul>
+    <form id="form" action="">
+      <input id="input" autocomplete="off" /><button>Send</button>
+    </form>
+    <div id="toaster">Invalid move</div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io();
+    
+      var form = document.getElementById('form');
+      var input = document.getElementById('input');
+    
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();  // Prevent the default form submission behavior
+
+        if (input.value) {          
+          // Send the message to the server
+          socket.emit('chat message', input.value);
+
+          // Clear the input field
+          input.value = '';
+        }
+      });
+
+      
+      socket.on('legal move', function(msg) {
+        var item = document.createElement('li');
+        item.textContent = "You: " + msg;
+        document.getElementById('messages').appendChild(item);
+      });
+      // Function to show and hide the toaster
+      function showToaster(message) {
+        console.log("Toaster")
+        var toaster = document.getElementById('toaster');
+        toaster.textContent = message;
+        toaster.style.display = 'block';
+
+        setTimeout(function() {
+            toaster.style.display = 'none';
+        }, 5000); // Hide after 5 seconds
+      }
+
+      // Socket.IO event listener for "invalid move"
+      socket.on('invalid move', function() {
+        showToaster('Invalid move');
+      });
+
+      socket.on('engine move', function(msg) {
+        var item = document.createElement('li');
+        item.textContent = "Engine: " + msg;
+        document.getElementById('messages').appendChild(item);
+      });
+    </script>
+  </body>
+</html>
