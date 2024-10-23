@@ -1,0 +1,10 @@
+{
+    "name": "Algebric-chess",
+    "version": "1.0.0",
+    "scripts": {
+        "setup": "node setup.js"
+    },
+    "dependencies": {
+        "unzipper": "^0.12.3"
+    }
+}
