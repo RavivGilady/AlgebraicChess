@@ -1,0 +1,31 @@
+/* Apply the CSS variable for the caret color */
+input {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 2rem; /* Increase font size */
+    padding: 1rem; /* Increase padding for more space inside */
+    border: none; /* Remove border */
+    background: transparent; /* Make background transparent */
+    color: #000; /* Text color (adjust as needed) */
+    caret-color: var(--caret-color); /* Use the variable for caret color */
+    animation: blink-caret 1s step-end infinite;
+    outline: none; /* Remove default focus outline */
+    box-sizing: border-box; /* Include padding and border in element's total width and height */
+  }
+  
+  /* Animation for the blinking caret */
+  @keyframes blink-caret {
+    from, to {
+      caret-color: transparent; /* Caret is hidden */
+    }
+    50% {
+      caret-color: var(--caret-color); /* Caret is visible */
+    }
+  }
+  
+  /* Style for when the input is active */
+  input.active {
+    font-style: italic;
+    font-weight: 200;
+
+  }
+  

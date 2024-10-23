@@ -2,7 +2,7 @@ const { spawn } = require('child_process');
 const path = require('path');
 
 // Path to the Stockfish binary
-const stockfishPath = path.join(__dirname, 'stockfishBinary/stockfish-windows-x86-64-avx2.exe'); // Update with the correct file name
+const stockfishPath = path.join(__dirname, 'stockfishBinary/stockfish-windows-x86-64-sse41-popcnt.exe'); // Update with the correct file name
 
 // Function to send a command to Stockfish and get the response
 function sendCommand(engine, command, expectResponse = true) {

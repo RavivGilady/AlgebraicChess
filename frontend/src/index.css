@@ -1,0 +1,14 @@
+body {
+  margin: 0;
+  background-color: #F5EFE7;
+  font-family: "Montserrat";
+  font-weight: 200;
+  font-style: italic;
+}
+
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+

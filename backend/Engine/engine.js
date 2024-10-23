@@ -6,25 +6,18 @@ class Engine {
       this.chess = new Chess();
       this.turn = 'white';
       this.whitePlayer = whitePlayer;
-      this.elo = 3190;
+      this.elo = 1320;
     }
     printBoard(){
         console.log(this.chess.ascii())
     }
-
-    move(userMove){
+    userMove(userMove){
         this.chess.move(userMove)
 
     }
 
-    printAvailableMoves(){
-        console.log(this.chess.moves())
-    }
-    isMoveLeagal(move){
-
-        return this.chess.moves().includes(move)
-    }
-    async requestMove(){
+   
+    async engineMove(){
         
         var move = runStockfish(this.elo,this.chess.fen())
         return move.then(uciMove => {
@@ -57,6 +50,35 @@ class Engine {
     
         return num >= 1320 && num <= 3000;
     }
+
+    printAvailableMoves(){
+        console.log(this.chess.moves())
+    }
+    isMoveLeagal(move){
+
+        return this.chess.moves().includes(move)
+    }
+    isGameOver(){
+        return this.chess.isGameOver();
+    }
+    getGameOverReason(){
+        if(!this.isGameOver()){
+            throw new Error("Game not over yet!");
+        }
+    if (this.chess.isThreefoldRepetition())
+        return "threeFold"
+    if (this.chess.isDraw())
+        return "draw"
+    if (this.chess.isInsufficientMaterial())
+        return "insufficientMaterial"
+    if (this.chess.isStalemate())
+        return "stalemate"
+    }
+
+    isCheckmate(){
+        return this.chess.isCheckmate();
+    }
+    
 }
 
     module.exports = Engine;
