@@ -14,6 +14,7 @@ In order to start client:
 
 
 Current Backlog:
+- [ ] Fixing Engine.js and add GamePlayer interface that will implement "Strategy" design pattern, so we can have both bots and real players
 - [ ] Adding a script to run the whole app for developing purposes
 - [ ] Adding users notion
 - [ ] Game notion
