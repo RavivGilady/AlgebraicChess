@@ -1,107 +1,149 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Socket.IO chat</title>
-    <style>
-      body { margin: 0; padding-bottom: 3rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
 
-      #form { background: rgba(0, 0, 0, 0.15); padding: 0.25rem; position: fixed; bottom: 0; left: 0; right: 0; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
-      #input { border: none; padding: 0 1rem; flex-grow: 1; border-radius: 2rem; margin: 0.25rem; }
-      #input:focus { outline: none; }
-      #form > button { background: #333; border: none; padding: 0 1rem; margin: 0.25rem; border-radius: 3px; outline: none; color: #fff; }
+<head>
+  <title>Socket.IO chat</title>
+  <style>
+    body {
+      margin: 0;
+      padding-bottom: 3rem;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
 
-      #messages { list-style-type: none; margin: 0; padding: 0; }
-      #messages > li { padding: 0.5rem 1rem; }
-      #messages > li:nth-child(odd) { background: #efefef; }
-      
-      #toaster {
-    display: none;
-    position: fixed;
-    bottom: 60px; /* Adjusts the toaster above the input line */
-    left: 10px;
-    right: 10px;
-    background-color: red;
-    color: white;
-    padding: 10px;
-    border-radius: 5px;
-    text-align: center;
-    z-index: 1000;
-    max-width: calc(100% - 20px); /* Ensures the toaster doesn't exceed screen width */
-}
-    </style>
-  </head>
-  <body>
-    <ul id="messages"></ul>
-    <form id="form" action="">
-      <input id="input" autocomplete="off" /><button>Send</button>
-    </form>
-    <div id="toaster">Invalid move</div>
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-      var socket = io();
-    
-      var form = document.getElementById('form');
-      var input = document.getElementById('input');
-      var button = form.querySelector('button'); // Get the button element
+    #form {
+      background: rgba(0, 0, 0, 0.15);
+      padding: 0.25rem;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      height: 3rem;
+      box-sizing: border-box;
+      backdrop-filter: blur(10px);
+    }
 
-      form.addEventListener('submit', function(e) {
-        e.preventDefault();  // Prevent the default form submission behavior
+    #input {
+      border: none;
+      padding: 0 1rem;
+      flex-grow: 1;
+      border-radius: 2rem;
+      margin: 0.25rem;
+    }
 
-        if (input.value) {          
-          // Send the message to the server
-          socket.emit('chat message', input.value);
+    #input:focus {
+      outline: none;
+    }
 
-          // Clear the input field
-          input.value = '';
-        }
-      });
+    #form>button {
+      background: #333;
+      border: none;
+      padding: 0 1rem;
+      margin: 0.25rem;
+      border-radius: 3px;
+      outline: none;
+      color: #fff;
+    }
 
-      
-      socket.on('legal move', function(msg) {
-        var item = document.createElement('li');
-        item.textContent = "You: " + msg;
-        document.getElementById('messages').appendChild(item);
-      });
-      // Function to show and hide the toaster
-      function showToaster(message,timeout = true) {
-        console.log("Toaster")
-        var toaster = document.getElementById('toaster');
-        toaster.textContent = message;
-        toaster.style.display = 'block';
-        if(timeout){
-        setTimeout(function() {
-            toaster.style.display = 'none';
-        }, 5000); 
+    #messages {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    #messages>li {
+      padding: 0.5rem 1rem;
+    }
+
+    #messages>li:nth-child(odd) {
+      background: #efefef;
+    }
+
+    #toaster {
+      display: none;
+      position: fixed;
+      bottom: 60px;
+      left: 10px;
+      right: 10px;
+      background-color: red;
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      text-align: center;
+      z-index: 1000;
+      max-width: calc(100% - 20px);
+    }
+  </style>
+</head>
+
+<body>
+  <ul id="messages"></ul>
+  <form id="form" action="">
+    <input id="input" autocomplete="off" /><button>Send</button>
+  </form>
+  <div id="toaster">Invalid move</div>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    var socket = new io();
+    var form = document.getElementById('form');
+    var input = document.getElementById('input');
+    var button = form.querySelector('button');
+    var moveId = null;
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      if (input.value) {
+        console.log(`move: ${input.value}, moveId: ${moveId}`);
+
+        if (moveId !== null) {
+
+        socket.emit('move', { move: input.value, moveId: moveId });
+        console.log(`move: ${input.value}, moveId: ${moveId}`);
+        input.value = '';
+      }}});
+
+    // Function to show and hide the toaster
+    function showToaster(message, timeout = true) {
+      console.log("Toaster");
+      var toaster = document.getElementById('toaster');
+      toaster.textContent = message;
+      toaster.style.display = 'block';
+      if (timeout) {
+        setTimeout(function () {
+          toaster.style.display = 'none';
+        }, 5000);
       }
-      }
-      function gameOver(){
-        input.disabled = true;
-        button.disabled = true
-      }
-      // Socket.IO event listener for "invalid move"
-      socket.on('invalid move', function() {
-        showToaster('Invalid move');
-      });
+    }
 
-      socket.on('engine move', function(msg) {
-        var item = document.createElement('li');
-        item.textContent = "Engine: " + msg;
-        document.getElementById('messages').appendChild(item);
-      });
-      socket.on('draw', function(msg) {
-        showToaster(`Draw - ${msg}`,false);
-        gameOver();
-      });
-      socket.on('checkmate player 1', function() {
-        showToaster("Checkmate! player 1 won!",false);
-        gameOver();
+    function gameOver() {
+      input.disabled = true;
+      button.disabled = true;
+    }
 
-      });
-      socket.on('checkmate player 2', function() {
-        showToaster("Checkmate! player 2 won!",false);
-        gameOver();
+    // Listen for server messages
+    socket.on('make move', function (data) {
+      console.log(JSON.stringify(data))
+      moveId = data; 
+    });
 
-      });
-    </script>
-  </body>
+    socket.on('bad move', function (data) {
+      showToaster(`Invalid move ${data}`);
+    });
+
+    socket.on('move made', function (data) {
+      console.log("move made event");
+      var item = document.createElement('li');
+      item.textContent = `${data.color}:  + ${data.move}`;
+      document.getElementById('messages').appendChild(item);
+    });
+
+    // Handle game over
+    socket.on('game over', function (reason, winner) {
+      gameOver();
+      showToaster(`Game Over: ${reason}. Winner: ${winner}`, false);
+    });
+  </script>
+</body>
+
 </html>

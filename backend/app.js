@@ -1,11 +1,11 @@
-const Engine = require('./Engine/engine');
-
-// const engine = new Engine();
+const Game = require('./Game/game');
 const express = require('express');
 const app = express();
 const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
+const BotPlayer = require('./players/BotPlayer');
+const HumanPlayer = require('./players/HumanPlayer');
 const io = new Server(server);
 const PORT = process.env.PORT || 5000;
 
@@ -14,41 +14,19 @@ app.get('/', (req, res) => {
 });
 
 io.on('connection', (socket) => {
-  const engine = new Engine();
-  console.log('a user connected');
+  console.log('a user connected, game is starting');
+  isWhite = Math.random() > 0 ? true : false
+  console.log(`isWhite? ${isWhite}`)
+  const bot = new BotPlayer(1320)
+  const human = new HumanPlayer(socket)
+  const game = isWhite? new Game(human,bot) : new Game(bot,human)
+  game.startGame();
+
   socket.on('disconnect', () => {
     console.log('user disconnected');
+    //add resign 
   });
-  socket.on('chat message', (move) => {
-   if(engine.isMoveLeagal(move)){
-    engine.userMove(move)
-    socket.emit("legal move",move)
-    if(engine.isGameOver()){
-      if(engine.isCheckmate())
-        socket.emit("checkmate player 1")
-      else
-        socket.emit("draw",engine.getGameOverReason())
-    }
-    engine.engineMove().then(move => { 
-      socket.emit("engine move",move)
-      console.log(`Sent move to client: ${move}`)
-      if(engine.isGameOver()){
-        if(engine.isCheckmate())
-          socket.emit("checkmate player 2")
-        else
-          socket.emit("draw",engine.getGameOverReason())
-      }
-    });
-    
-   }
-   else{
-    engine.printAvailableMoves();
-    socket.emit("invalid move")
-   }
-  });
-  socket.on('set elo', (move) => {
-    engine.setElo(move);
-    })
+
 });
 
 
