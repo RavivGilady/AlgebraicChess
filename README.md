@@ -10,3 +10,17 @@ In order to start server:
 In order to start client:
 1. cd ../frontend
 2. npm start
+
+
+
+Current Backlog:
+- [ ] Fixing Engine.js and add GamePlayer interface that will implement "Strategy" design pattern, so we can have both bots and real players
+- [ ] Adding a script to run the whole app for developing purposes
+- [ ] Adding users notion
+- [ ] Game notion
+- [ ] Abillity to play two users against each other
+- [ ] Abillity  to play agains computer using game notion
+- [ ] Adding menu to choose whom to play against
+- [ ] Adding bots option
+- [ ] Researching adding more variaty of bots as in chess.com (Stockfish is using elo and depth, where elo is minimum 1350)
+- [ ] Adding a DB to save game
