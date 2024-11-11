@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const logger = require('../utils/logger');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key';
 
@@ -8,8 +9,8 @@ const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key';
 const registerUser = async (req, res) => {
     const { username, password } = req.body;
 
+    logger.trace(`user tried registering: ${JSON.stringify({ username, password })}`)
     try {
-        // Check if the username already exists
         const existingUser = await User.findOne({ username });
         if (existingUser) {
             return res.status(400).json({ message: 'Username already exists' });
@@ -24,6 +25,7 @@ const registerUser = async (req, res) => {
 
         res.status(201).json({ message: 'User registered successfully' });
     } catch (error) {
+        logger.error(`Error registering a user: ${error}`)
         res.status(500).json({ message: 'Server error' });
     }
 };
