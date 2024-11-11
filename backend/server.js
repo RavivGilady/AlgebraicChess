@@ -15,6 +15,11 @@ const authRoutes = require('./routes/auth')
 const logger = require('./utils/logger')
 
 
+const cors = require('cors');
+
+
+app.use(cors({ origin: 'http://localhost:3000', methods: 'GET,POST,OPTIONS' }));
+
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
