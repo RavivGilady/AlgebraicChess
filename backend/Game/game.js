@@ -5,22 +5,39 @@ const { v4: uuidv4 } = require('uuid');
 
 class Game {
 
-    constructor(whitePlayer, blackPlayer) {
+    constructor() {
         this.chess = new Chess();
-        this.whitePlayer = whitePlayer;
-        this.whitePlayer.setOnMoveCallback(data=>this.makeMove(this.whitePlayer,{"move": data.move,"moveId":data.moveId}))
-        this.whitePlayer.setColor('white')
-
-        this.blackPlayer = blackPlayer;
-        this.blackPlayer.setOnMoveCallback(data=>this.makeMove(this.blackPlayer,{"move": data.move,"moveId":data.moveId}))
-        this.blackPlayer.setColor('black')
-
-        this.currentPlayer = whitePlayer
-        this.currentMoveID = uuidv4();
+        this.whitePlayer = null;
+        this.blackPlayer = null;
+        this.currentPlayer = null;
+        this.currentMoveId = uuidv4();
+        this.gameId = uuidv4();
     }
-    startGame(){
-        console.log(`move id for start ${this.currentMoveID}`)
-        this.whitePlayer.requestMove(this.currentMoveID)
+    addPlayer(player) {
+        if (this.whitePlayer == null && this.blackPlayer == null) {
+            Math.random() > 0.5 ? this.whitePlayer == player : this.blackPlayer = player;
+        }
+        else if (this.whitePlayer == null) {
+            this.whitePlayer = player;
+        }
+        else {
+            this.blackPlayer = player;
+        }
+        if (this.areAllPlayersSet()) {
+            this.startGame();
+        }
+    }
+    areAllPlayersSet() {
+        return this.whitePlayer != null && this.blackPlayer != null;
+    }
+    startGame() {
+        console.log(`move id for start ${this.currentMoveId}`)
+        this.whitePlayer.setOnMoveCallback(data => this.makeMove(this.whitePlayer, { "move": data.move, "moveId": data.moveId }));
+        this.whitePlayer.setColor('white');
+        this.blackPlayer.setOnMoveCallback(data => this.makeMove(this.blackPlayer, { "move": data.move, "moveId": data.moveId }));
+        this.blackPlayer.setColor('black');
+        this.currentPlayer = this.whitePlayer;
+        this.currentPlayer.requestMove(this.currentMoveId);
     }
     printBoard() {
         console.log(this.chess.ascii())
@@ -36,7 +53,7 @@ class Game {
     isGameOver() {
         return this.chess.isGameOver();
     }
-    isCheckmate(){
+    isCheckmate() {
         return this.chess.isCheckmate();
 
     }
@@ -72,13 +89,13 @@ class Game {
     makeMove(player, moveDetails) {
         console.log(JSON.stringify(moveDetails))
         let move = null;
-        if (player === this.currentPlayer && this.currentMoveID === moveDetails.moveId) {
-            try{
-            
-            move = this.performMove(moveDetails.move); 
-            
+        if (player === this.currentPlayer && this.currentMoveId === moveDetails.moveId) {
+            try {
+
+                move = this.performMove(moveDetails.move);
+
             }
-            catch(error) {
+            catch (error) {
                 this.getNewMove(moveDetails.move)
                 return;
             }
@@ -91,7 +108,7 @@ class Game {
                 this.swapTurn()
                 this.requestMove()
             }
-            
+
         }
 
     }
@@ -100,7 +117,7 @@ class Game {
         this.whitePlayer.notifyMove({ "color": playerColor, "move": move })
         this.blackPlayer.notifyMove({ "color": playerColor, "move": move })
     }
-    endGame(){
+    endGame() {
         winner = this.isCheckmate() ? this.currentPlayer : null;
         this.notifyGameResult(winner);
     }
@@ -110,20 +127,20 @@ class Game {
         this.requestMove()
     }
     requestMove() {
-        this.currentMoveID = uuidv4();
-        this.currentPlayer.requestMove(this.currentMoveID)
+        this.currentMoveId = uuidv4();
+        this.currentPlayer.requestMove(this.currentMoveId)
     }
 
-    isUciMove(move){
+    isUciMove(move) {
         return /^[a-h][1-8][a-h][1-8].?/.test(move);
     }
-    performMove(move){
+    performMove(move) {
         return this.isUciMove(move) ? this.chess.move({
             from: move.slice(0, 2),
             to: move.slice(2, 4),
             ...(move.length > 4 ? { promotion: move[4] } : {})  // Check length before accessing move[4]
         }).san
-        : this.chess.move(move).san
+            : this.chess.move(move).san
     }
 }
 

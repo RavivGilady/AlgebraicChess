@@ -1,13 +1,14 @@
 const Player = require('./Player.js');
 
 class HumanPlayer extends Player {
-    constructor(socket) {
+    constructor(socket,playerDetails) {
         super();
         this.socket = socket;
-        this.onMove = null
+        this.onMove = null;
+        this.playerDetails = playerDetails;
     }
-    setColor(color){
-        this.socket.emit("color",color);
+    setColor(color) {
+        this.socket.emit("color", color);
     }
 
     notifyBadMove(move) {
@@ -19,16 +20,19 @@ class HumanPlayer extends Player {
     notifyMove(move) {
         this.socket.emit("move made", move);
     }
-    setOnMoveCallback(callback){
+    setOnMoveCallback(callback) {
         this.onMove = callback;
     }
 
-    requestMove(moveId){
-        if(this.onMove == null){
+    requestMove(moveId) {
+        if (this.onMove == null) {
             throw new Error("player doesn't have a callback!")
         }
-        this.socket.emit("make move",moveId)
-        this.socket.once('move', move =>this.onMove(move,moveId))
+        this.socket.emit("make move", moveId)
+        this.socket.once(`move ${moveId}`, move => this.onMove(move, moveId))
+    }
+    getPlayerDetails() {
+        return ({ type: 'human', elo: this.playerDetails.elo, name: this.playerDetails.username })
     }
 
 }

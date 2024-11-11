@@ -17,6 +17,10 @@ class Player {
   notifyBadMove(move) {
     throw new Error("notifyBadMove must be implemented by subclasses");
   }
+  getPlayerDetails(){
+    throw new Error("getPlayerDetails must be implemented by subclasses");
+
+  }
   
 }
 module.exports = Player;

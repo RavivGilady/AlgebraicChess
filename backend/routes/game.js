@@ -4,7 +4,7 @@ const { verifyToken } = require('../middlewares/authMiddleware');
 
 const router = express.Router();
 router.use(verifyToken)
-router.get('/startGameBot', gameAgainstBot);
+router.get('/startGameBot',(req,res) => gameAgainstBot(req.query.elo,res));
 router.get('/startGameHuman', gameAgainstHuman);
 
 module.exports = router;
