@@ -2,9 +2,13 @@
     "name": "Algebric-chess",
     "version": "1.0.0",
     "scripts": {
-        "setup": "node setup.js"
+        "setup": "node setup.js",
+        "start": "concurrently \"cd backend && npm start\" \"cd frontend && npm start\""
     },
     "dependencies": {
         "unzipper": "^0.12.3"
+    },
+    "devDependencies": {
+        "concurrently": "^9.1.0"
     }
 }
