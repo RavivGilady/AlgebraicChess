@@ -1,26 +1,33 @@
-Currently in order to make environment ready (Currently only windows x64), we need to run
+Currently in order to make environment ready (Currently only windows x64, because of stockfish binary download), we need to run
 ```bash
 npm run setup
 ```
 
-In order to start server:
-1. cd backend
-2. node app.js
+In order to start both server & client:
+```bash
+npm start
+```
 
-In order to start client:
-1. cd ../frontend
-2. npm start
+Game Mechanism:
+- [ ] Basic matchmaking between two players who wish to play against a human player
+- [ ] Creating a game against a bot, specifying its elo
 
+Frontend:
+- [ ] Enable a user to start a game against a human/bot
+- [ ] Managing a game for the user
 
+Backend:
+- [ ] Add support for google/facebook/chess.com(is that a thing?) authentication
+- [ ] Add support for requesting user data
+- [ ] Add support for viewing user's games
+- [ ] Save a game once it's over
 
-Current Backlog:
-- [ ] Fixing Engine.js and add GamePlayer interface that will implement "Strategy" design pattern, so we can have both bots and real players
-- [ ] Adding a script to run the whole app for developing purposes
-- [ ] Adding users notion
-- [ ] Game notion
-- [ ] Abillity to play two users against each other
-- [ ] Abillity  to play agains computer using game notion
-- [ ] Adding menu to choose whom to play against
-- [ ] Adding bots option
-- [ ] Researching adding more variaty of bots as in chess.com (Stockfish is using elo and depth, where elo is minimum 1350)
-- [ ] Adding a DB to save game
+General Project:
+- [ ] Make setup script os agnostic
+- [ ] Improve Readme
+
+Far Future Backlog:
+- [ ] Researching adding more variety of bots as in chess.com (Stockfish is using elo and depth, where elo is minimum 1350)
+- [ ] Create a different entity for managing games using Redis for in-memory db for ongoing games
+- [ ] Research advanced matchmaking based on elo. Maybe use another entity to create this matchmaking (Again using Redis)
+- [ ] Create sub-processes for bot players so that server won't rely on bot's fast/slow response for games
