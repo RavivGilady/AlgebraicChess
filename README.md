@@ -24,6 +24,7 @@ Backend:
 
 General Project:
 - [ ] Make setup script os agnostic
+- [ ] Improve Readme
 
 Far Future Backlog:
 - [ ] Researching adding more variety of bots as in chess.com (Stockfish is using elo and depth, where elo is minimum 1350)
