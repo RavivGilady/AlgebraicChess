@@ -12,13 +12,13 @@ const loggingMiddleware = require('./middlewares/loggerMiddleware')
 const io = new Server(server);
 const PORT = process.env.PORT || 5000;
 const authRoutes = require('./routes/auth')
+const gameRoutes = require('./routes/game')
 const logger = require('./utils/logger')
 
 
 const cors = require('cors');
 
 
-app.use(cors({ origin: 'http://localhost:3000', methods: 'GET,POST,OPTIONS' }));
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
@@ -26,8 +26,10 @@ app.get('/', (req, res) => {
 
 app.use(express.json());
 app.use(loggingMiddleware.logHttpRequests)
-app.use('/auth',authRoutes)
+app.use(cors({ origin: 'http://localhost:3000', methods: 'GET,POST,OPTIONS' }));
 
+app.use('/auth',authRoutes)
+app.use('/game',gameRoutes)
 
 io.on('connection', (socket) => {
   console.log('a user connected, game is starting');
