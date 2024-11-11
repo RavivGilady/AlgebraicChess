@@ -5,14 +5,14 @@ const logger = require('../utils/logger');
 exports.verifyToken = (req, res, next) => {
     const token = req.header('Authorization')?.split(' ')[1];
     if (!token) {
-        logger.error("Unauthorized request")
+        logger.error(`Unauthorized request ${req.method} ${req.url}`)
         return res.status(401).json({ error: 'Unauthorized' });
     }
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         req.userId = decoded.userId;
-         next();
+        next();
     } catch (error) {
         logger.error(`Error was thrown to verify token:${error}`)
         return res.status(401).json({ error: 'Unauthorized' });

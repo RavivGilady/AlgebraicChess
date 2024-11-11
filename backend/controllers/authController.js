@@ -5,7 +5,6 @@ const logger = require('../utils/logger');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key';
 
-// Controller for user registration
 const registerUser = async (req, res) => {
     const { username, password } = req.body;
 
