@@ -1,3 +1,4 @@
+require('dotenv').config();
 const Game = require('./Game/game');
 const express = require('express');
 const app = express();
@@ -7,15 +8,19 @@ const { connectDb } = require('./config/db');
 const { Server } = require("socket.io");
 const BotPlayer = require('./players/BotPlayer');
 const HumanPlayer = require('./players/HumanPlayer');
+const loggingMiddleware = require('./middlewares/loggerMiddleware')
 const io = new Server(server);
 const PORT = process.env.PORT || 5000;
 const authRoutes = require('./routes/auth')
+const logger = require('./utils/logger')
+
+
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
 app.use(express.json());
-
+app.use(loggingMiddleware.logHttpRequests)
 app.use('/auth',authRoutes)
 
 
@@ -37,12 +42,12 @@ io.on('connection', (socket) => {
 
 
 server.listen(PORT, () => {
-  console.log(`listening on *:${PORT}`);
+  logger.info(`listening on *:${PORT}`)
 });
 
 connectDb()
-    .then(() => console.log('Database connected successfully'))
+    .then(() => logger.info('Database connected successfully'))
     .catch(err => {
-        console.error('Database connection failed:', err);
+        logger.error(`Database connection failed:, ${err}`);
         process.exit(1);
     });
