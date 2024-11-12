@@ -31,3 +31,4 @@ Far Future Backlog:
 - [ ] Create a different entity for managing games using Redis for in-memory db for ongoing games
 - [ ] Research advanced matchmaking based on elo. Maybe use another entity to create this matchmaking (Again using Redis)
 - [ ] Create sub-processes for bot players so that server won't rely on bot's fast/slow response for games
+- [ ] Pre-moves support
