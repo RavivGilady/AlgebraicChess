@@ -44,6 +44,9 @@ class BotPlayer extends Player {
     notifyBadMove(move) {
         throw new Error("Engine gave bad move somehow");
     }
+    getPlayerDetails(){
+        return ({type: 'bot', elo:this.elo})
+    }
 }
 
 

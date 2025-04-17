@@ -26,11 +26,11 @@ function Game() {
     setError(null);
     try {
       console.log('startGame')
+      handleGame();
       const response = await api.get(`${process.env.REACT_APP_API_BASE_URL}/game/startGameBot`, {
-        params: { elo: 2000 },
+        params: { username:"2",elo: 2000 },
       });
       setGameData(response.data);
-      handleGame();
       console.log(JSON.stringify(response.data))
     } catch (err) {
       setError('Failed to start game with bot.');
@@ -39,12 +39,18 @@ function Game() {
     }
   };
   const handleGame = () => {
-    setSocket(io(SERVER_URL))
-    socket.once('gameId', () => socket.emit('connect to game', gameData.gameId))
-    socket.on('move made',(move)=>console.log(`move made: ${move})`))
-    socket.on('make move',(moveId) => {
+    const newSocket = io(SERVER_URL, {
+      auth: {
+        token: localStorage.getItem("jwtToken"),
+      },
+    });
+    newSocket.once('gameId', () => newSocket.emit('connect to game', gameData.gameId))
+    newSocket.on('move made',(move)=>console.log(`move made: ${move})`))
+    newSocket.on('make move',(moveId) => {
       setMyTurn(true)
       updateMoveDetails('nextMoveId',moveId)
+    setSocket(newSocket);
+    
     })
   }
   const handleMove = () => {

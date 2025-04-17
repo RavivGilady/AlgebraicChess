@@ -23,9 +23,7 @@ class Game {
         else {
             this.blackPlayer = player;
         }
-        if (this.areAllPlayersSet()) {
-            this.startGame();
-        }
+
     }
     areAllPlayersSet() {
         return this.whitePlayer != null && this.blackPlayer != null;

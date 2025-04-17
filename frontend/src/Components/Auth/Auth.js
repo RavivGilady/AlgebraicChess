@@ -20,7 +20,7 @@ function Auth({ mode }) {
       // Store the JWT token after a successful login
       if (mode === 'login' && response.data.token) {
         localStorage.setItem('jwtToken', response.data.token);
-        navigate('/'); // Redirect to home or dashboard
+        navigate('/game'); // Redirect to home or dashboard
       }
     } catch (error) {
       setMessage(error.response?.data?.message || `${mode === 'login' ? 'Login' : 'Registration'} failed.`);
