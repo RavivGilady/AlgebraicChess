@@ -18,7 +18,6 @@ function sendCommand(engine, command, expectResponse = true) {
         // Listen for data from Stockfish
         engine.stdout.on('data', (data) => {
             response += data.toString();
-            console.log(`Received data: ${data.toString()}`); // Debugging
 
             // Handle specific commands differently
             if (command.startsWith('go') && isExpectingResponse) {

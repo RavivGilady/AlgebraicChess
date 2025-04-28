@@ -38,7 +38,6 @@ class BotPlayer extends Player {
     }
     
     notifyMove(move) {
-        console.log(`engine got a move: ${move.move}`)
         this.board.move(move.move)
     }
     notifyBadMove(move) {

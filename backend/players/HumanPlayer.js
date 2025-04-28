@@ -1,3 +1,5 @@
+const logger = require('../utils/logger.js')
+
 const Player = require('./Player.js');
 
 class HumanPlayer extends Player {
@@ -29,8 +31,10 @@ class HumanPlayer extends Player {
             throw new Error("player doesn't have a callback!")
         }
         this.socket.emit("make move", moveId)
-        this.socket.once(`move ${moveId}`, move => this.onMove(move, moveId))
+        
+        this.socket.once(`move ${moveId}`, move => this.onMove({"move":move,"moveId":moveId}))
     }
+    
     getPlayerDetails() {
         return ({ type: 'human', elo: this.playerDetails.elo, name: this.playerDetails.username })
     }

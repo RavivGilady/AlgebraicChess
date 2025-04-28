@@ -15,7 +15,7 @@ class Game {
     }
     addPlayer(player) {
         if (this.whitePlayer == null && this.blackPlayer == null) {
-            Math.random() > 0.5 ? this.whitePlayer == player : this.blackPlayer = player;
+            Math.random() > 0.5 ? this.whitePlayer = player : this.blackPlayer = player;
         }
         else if (this.whitePlayer == null) {
             this.whitePlayer = player;

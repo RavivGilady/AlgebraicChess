@@ -1,7 +1,11 @@
 const fs = require('fs');
 const path = require('path');
 
-const logStream = fs.createWriteStream(path.join(__dirname, '../logs/access.log'), { flags: 'a' });
+const logDir = path.join(__dirname, '../logs');
+// Make sure the directory exists
+fs.mkdirSync(logDir, { recursive: true });
+
+const logStream = fs.createWriteStream(path.join(logDir, 'access.log'), { flags: 'a' });
 
 const logMessage = (level, message) => {
   if (process.env.LOG_LEVEL === level || true) {

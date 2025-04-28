@@ -11,7 +11,6 @@ const PORT = process.env.PORT || 5000;
 const authRoutes = require('./routes/auth')
 const gameRoutes = require('./routes/game')
 const logger = require('./utils/logger')
-const { userSockets } = require('./utils/socketsStore');
 const { io } = require('./utils/socketsStore')
 
 const cors = require('cors');
@@ -44,7 +43,3 @@ connectDb()
         process.exit(1);
     });
 
-    
-module.exports = {
-  userSockets
-};

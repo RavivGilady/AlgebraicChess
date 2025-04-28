@@ -22,6 +22,9 @@ function Auth({ mode }) {
         localStorage.setItem('jwtToken', response.data.token);
         navigate('/game'); // Redirect to home or dashboard
       }
+      else if (mode === 'register') {
+        navigate('/login'); // Redirect to home or dashboard
+      }
     } catch (error) {
       setMessage(error.response?.data?.message || `${mode === 'login' ? 'Login' : 'Registration'} failed.`);
     }

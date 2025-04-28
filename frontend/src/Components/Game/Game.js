@@ -12,6 +12,9 @@ function Game() {
   const [myTurn, setMyTurn] = useState(false); // New state to track if it's player's turn
   const [moveDetails, setMoveDetails] = useState({ nextMoveId: null, move: null });
 
+  const token = localStorage.getItem('jwtToken');
+  const username = token ? JSON.parse(atob(token.split('.')[1])).username : null;
+
   const updateMoveDetails = (key, newValue) => {
     setMoveDetails((prevDictionary) => ({
       ...prevDictionary,
@@ -28,7 +31,7 @@ function Game() {
       console.log('startGame')
       handleGame();
       const response = await api.get(`${process.env.REACT_APP_API_BASE_URL}/game/startGameBot`, {
-        params: { username:"2",elo: 2000 },
+        params: { username: username, elo: 2000 },
       });
       setGameData(response.data);
       console.log(JSON.stringify(response.data))
@@ -41,20 +44,19 @@ function Game() {
   const handleGame = () => {
     const newSocket = io(SERVER_URL, {
       auth: {
-        token: localStorage.getItem("jwtToken"),
+        token: token
       },
     });
     newSocket.once('gameId', () => newSocket.emit('connect to game', gameData.gameId))
-    newSocket.on('move made',(move)=>console.log(`move made: ${move})`))
-    newSocket.on('make move',(moveId) => {
+    newSocket.on('move made', (move) => console.log(`move made: ${JSON.stringify(move)})`))
+    newSocket.on('make move', (moveId) => {
       setMyTurn(true)
-      updateMoveDetails('nextMoveId',moveId)
-    setSocket(newSocket);
-    
+      updateMoveDetails('nextMoveId', moveId)
     })
+    setSocket(newSocket);
   }
   const handleMove = () => {
-      socket.emit(`move ${moveDetails.nextMoveId}`,moveDetails.move)
+    socket.emit(`move ${moveDetails.nextMoveId}`, moveDetails.move)
   }
   return (
     <div style={styles.container}>
