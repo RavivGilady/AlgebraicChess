@@ -1,12 +1,12 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
-
-const { token } = useAuth(); // 
+import {useAuth} from './AuthContext'
 
 const GameContext = createContext();
 export const useGame = () => useContext(GameContext);
 
-export const GameProvider = ({ children }) => {
+export const GameProvider = ({ gameId,children }) => {
+  const { token , serverUrl} = useAuth();
   const [gameState, setGameState] = useState({
     board: null,
     moves: [],
@@ -18,20 +18,24 @@ export const GameProvider = ({ children }) => {
 
 
   useEffect(() => {
-    const newSocket = io(SERVER_URL, {
+    console.log("creating socket")
+    const newSocket = io(serverUrl, {
           auth: {
-            token: token
+            token: token,
+            gameId:gameId
+
           },
         });
     setSocket(newSocket);
 
-    newSocket.once('gameId', () => newSocket.emit('connect to game', gameData.gameId))
+    newSocket.once('gameId', () => newSocket.emit('connect to game', gameId))
     newSocket.on('move made', (move) => {
       setGameState(prev => ({
         ...prev,
         lastMove: move,
         moves: [...prev.moves, move]
       }));
+
     });
     newSocket.on('bad move', (badMove) => {
      console.log(`Bad Move: ${badMove}`)
@@ -55,7 +59,7 @@ export const GameProvider = ({ children }) => {
           }));
     }
   };
-
+useEffect(()=> console.log(`moves list: ${JSON.stringify(gameState.moves)}`),[gameState.moves])
 
   return (
     <GameContext.Provider value={{ gameState, setGameState,sendMoveToServer }}>

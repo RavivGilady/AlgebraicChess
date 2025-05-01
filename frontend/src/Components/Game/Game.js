@@ -46,6 +46,7 @@ function Game() {
       auth: {
         token: token
       },
+      gameId:gameData.gameId
     });
     newSocket.once('gameId', () => newSocket.emit('connect to game', gameData.gameId))
     newSocket.on('move made', (move) => console.log(`move made: ${JSON.stringify(move)})`))
@@ -87,7 +88,7 @@ function Game() {
         Make Move
       </button>
     </div>
-  );
+);
 }
 
 const styles = {

@@ -5,7 +5,9 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon --inspect=9229 server.js"
+    "start": "nodemon server.js",
+    "debug": "nodemon --inspect=9229 server.js"
+
   },
   "keywords": [],
   "author": "",

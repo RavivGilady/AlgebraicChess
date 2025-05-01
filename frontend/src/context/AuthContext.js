@@ -1,7 +1,6 @@
 import { createContext, useContext, useState, useMemo } from "react";
 
 // Optional: use a lightweight decoder (no validation)
-import jwt_decode from "jwt-decode";
 
 const AuthContext = createContext();
 
@@ -14,8 +13,8 @@ export const AuthProvider = ({ children }) => {
   const username = useMemo(() => {
     if (!token) return null;
     try {
-      const decoded = jwt_decode(token);
-      return decoded.username || decoded.name || null; // adjust based on your payload
+
+      return token ? JSON.parse(atob(token.split('.')[1])).username : null;
     } catch {
       return null;
     }
