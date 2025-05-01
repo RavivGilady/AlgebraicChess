@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes,  } from 'react-router-dom';
 import Home from './Components/Home/Home';
 import Auth from './Components/Auth/Auth';
 import {AuthProvider} from './context/AuthContext'
-import Game2 from './Components/Game/Game2';
+import Game from './Components/Game/Game';
 import PrivateRoute from './Components/PrivateRoute/PrivateRoute';
 
 function App() {
@@ -18,7 +18,7 @@ function App() {
 
           {/* Protected routes */}
           <Route element={<PrivateRoute/>}>
-            <Route path="/game" element={<Game2/>} />
+            <Route path="/game" element={<Game/>} />
           </Route>
 
           {/* Catch-all */}
