@@ -1,14 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 body {
-  margin: 0;
-  background-color: #F5EFE7;
-  font-family: "Montserrat";
-  font-weight: 200;
-  font-style: italic;
+  @apply bg-background text-dark;
 }
 
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
 }
-
+.animate-blink {
+  animation: blink 1s step-start infinite;
+}
