@@ -3,7 +3,8 @@
     "version": "1.0.0",
     "scripts": {
         "setup": "node setup.js",
-        "start": "concurrently \"cd backend && npm start\" \"cd frontend && npm start\""
+        "start": "concurrently \"cd backend && npm start\" \"cd frontend && npm start\"",
+        "debug": "concurrently \"cd backend && npm run debug\" \"cd frontend && npm start\""
     },
     "dependencies": {
         "unzipper": "^0.12.3"
