@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { GameProvider } from '../../context/GameContext';
-import MoveInput from '../MoveInput/MoveInput';
 import api from '../../services/api'
 import Layout from '../Layout/Layout';
+import MovePanel from '../MovePanel/MovePanel';
 const Game = () => {
     const [gameId, setGameId] = useState(null);
     const [opponentElo, setOpponentElo] = useState(null);
@@ -23,7 +23,7 @@ const Game = () => {
                 <>
                     <button onClick={handleStartGame}>Restart Game</button>
                     <GameProvider key={gameId} gameId={gameId} opponentElo={opponentElo}>
-                        <Layout><MoveInput/></Layout>
+                        <Layout><MovePanel/></Layout>
                  
                     </GameProvider>
 

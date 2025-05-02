@@ -5,11 +5,37 @@
 body {
   @apply bg-background text-dark;
 }
+.move-panel {
+  display: grid;
+  grid-template-rows: auto 1fr; /* Two rows: one for the last move and one for the move input */
+  gap: 10px; /* Adds some spacing between the rows */
+  width: 100%;
+}
+
+.last-move-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 30px; /* Fixed height to avoid shifting */
+  opacity: 0; /* Default state to hide the move */
+  transition: opacity 0.3s ease; /* Smooth fade-in/fade-out */
+}
+
+.last-move {
+  font-size: 16px;
+  color: #131010;
+  word-wrap: break-word; /* Prevents overflow if the move text is too long */
+}
+
+.move-input {
+  width: 100%; /* Ensure the input field stretches across */
+}
+
+.blink {
+  animation: blink 1s step-start infinite;
+}
 
 @keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-.animate-blink {
-  animation: blink 1s step-start infinite;
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
 }
