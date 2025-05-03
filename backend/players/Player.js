@@ -8,7 +8,6 @@ class Player {
   requestMove(nextMoveId) {
   }
   gameOver(reason, winner) {
-    throw new Error("gameOver must be implemented by subclasses");
   }
   notifyMove(move) {
     throw new Error("notifyMove must be implemented by subclasses");

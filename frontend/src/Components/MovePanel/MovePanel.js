@@ -6,13 +6,13 @@ const MovePanel = () => {
   const { gameState } = useGame();
 
   return (
-    <div className="move-panel">
-    <div className="last-move">
+<div className="w-[80vw] h-[60vh] fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-xl p-4 flex items-center justify-center">
+<div className="last-move">
       <LastMove/>
     </div>
-    <div className="move-input">
-      {gameState.isItMyTurn && <MoveInput />}
-    </div>
+<div>
+{gameState.isItMyTurn && <MoveInput />}
+</div>
   </div>
   );
 };

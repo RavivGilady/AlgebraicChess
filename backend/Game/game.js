@@ -12,6 +12,8 @@ class Game {
         this.currentPlayer = null;
         this.currentMoveId = uuidv4();
         this.gameId = uuidv4();
+        this.winner = null;
+        this.gameOver = false;
     }
     addPlayer(player) {
         if (this.whitePlayer == null && this.blackPlayer == null) {
@@ -76,9 +78,9 @@ class Game {
         return this.chess.isCheckmate();
     }
 
-    notifyGameResult(winner) {
-        this.whitePlayer.gameOver(this.getGameOverReason(), winner)
-        this.blackPlayer.gameOver(this.getGameOverReason(), winner)
+    notifyGameResult() {
+        this.whitePlayer.gameOver(this.getGameOverReason(), this.winner)
+        this.blackPlayer.gameOver(this.getGameOverReason(), this.winner)
     }
 
     swapTurn() {
@@ -100,7 +102,7 @@ class Game {
 
             this.notifyMove(move)
             if (this.isGameOver()) {
-                endGame();
+                this.endGame();
             }
             else {
                 this.swapTurn()
@@ -116,8 +118,9 @@ class Game {
         this.blackPlayer.notifyMove({ "color": playerColor, "move": move })
     }
     endGame() {
-        winner = this.isCheckmate() ? this.currentPlayer : null;
-        this.notifyGameResult(winner);
+        this.gameOver = true;
+        this.winner = this.isCheckmate() ? this.currentPlayer : null;
+        this.notifyGameResult();
     }
     getNewMove(move) {
         console.log(`move ${move} is bad , requesting new`)

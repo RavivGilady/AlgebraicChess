@@ -1,5 +1,5 @@
 const Game = require('../Game/game')
-
+const logger = require('../utils/logger')
 let activeGames = new Map()
 
 
@@ -17,7 +17,7 @@ const registerToGame = (player, gameId) => {
         }
     }
     else {
-        throw new Error(`Game with id '${gameId}' doesn't exists!`)
+        logger.error(`Game with id '${gameId}' doesn't exists!`)
     }
 }
 
