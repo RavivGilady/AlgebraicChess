@@ -4,6 +4,15 @@ import api from '../../services/api'
 import Layout from '../Layout/Layout';
 import MovePanel from '../MovePanel/MovePanel';
 const Game = () => {
+    useEffect(() => {
+      let token = localStorage.getItem("jwtToken");
+      if (!token) { 
+        api.get(loginAsGuestUrl)
+          .then(res => {
+            localStorage.setItem("jwtToken", res.data.token);
+          })
+      }
+    }, []);
     const [gameId, setGameId] = useState(null);
     const [opponentElo, setOpponentElo] = useState(null);
 

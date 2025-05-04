@@ -16,15 +16,14 @@ const { io } = require('./utils/socketsStore')
 const cors = require('cors');
 
 
-
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
-});
-
 app.use(express.json());
 app.use(loggingMiddleware.logHttpRequests)
-app.use(cors({ origin: 'https://algebric-chess.vercel.app/', methods: 'GET,POST,OPTIONS' }));
-
+app.use(cors({
+  origin: ['http://localhost:3000', 'https://algebric-chess.vercel.app'], // include both dev & prod
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
 app.use('/auth',authRoutes)
 app.use('/game',gameRoutes)
 
