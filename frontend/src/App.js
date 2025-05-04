@@ -11,11 +11,11 @@ const loginAsGuestUrl = '/auth/loginAsGuest';
 function App() {
 
   useEffect(() => {
-    let token = localStorage.getItem("token");
+    let token = localStorage.getItem("jwtToken");
     if (!token) { 
       api.get(loginAsGuestUrl)
         .then(res => {
-          localStorage.setItem("token", res.data.token);
+          localStorage.setItem("jwtToken", res.data.token);
         })
     }
   }, []);
