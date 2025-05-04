@@ -23,7 +23,7 @@ app.get('/', (req, res) => {
 
 app.use(express.json());
 app.use(loggingMiddleware.logHttpRequests)
-app.use(cors({ origin: 'http://localhost:3000', methods: 'GET,POST,OPTIONS' }));
+app.use(cors({ origin: 'https://algebric-chess.vercel.app/', methods: 'GET,POST,OPTIONS' }));
 
 app.use('/auth',authRoutes)
 app.use('/game',gameRoutes)
