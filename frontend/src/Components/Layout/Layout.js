@@ -1,13 +1,12 @@
-import TopBar from "../TopBar/TopBar"
-
+import TopBar from "../TopBar/TopBar";
 
 const Layout = ({ children }) => (
-    <div className="min-h-screen flex flex-col">
-<TopBar />
-      <main className="flex-grow flex justify-center items-center">
-        {children}
-      </main>
-    </div>
-  )
+  <div className="min-h-screen w-full flex flex-col">
+    <TopBar />
+    <main className="flex-1 w-full flex justify-center items-center">
+      {children}
+    </main>
+  </div>
+);
 
-export default Layout
+export default Layout;

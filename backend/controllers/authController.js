@@ -47,13 +47,35 @@ const loginUser = async (req, res) => {
         }
 
         const token = jwt.sign({ id: user._id, username: user.username }, JWT_SECRET, {
-            expiresIn: '1h' 
-        }); 
+            expiresIn: '1h'
+        });
 
-        res.json({ message: 'Login successful', token });   
-    } catch (error) {   
-        res.status(500).json({ message: 'Server error' });  
+        res.json({ message: 'Login successful', token });
+    } catch (error) {
+        res.status(500).json({ message: 'Server error' });
     }
 };
 
-module.exports = { registerUser, loginUser };
+const loginGuest = (req, res) => {
+    const guestUsername = generateGuestUsername();
+    logger.info(`created guest account ${guestUsername}`);
+    const token = jwt.sign({username: guestUsername }, JWT_SECRET, {
+        expiresIn: '1h'
+    });
+
+    res.json({ message: 'Login successful as a guest', token });
+}
+
+function generateGuestUsername() {
+    const digits = '0123456789'.split('');
+    let result = '';
+
+    // Shuffle digits and take the first 9
+    for (let i = 0; i < 9; i++) {
+        const randIndex = Math.floor(Math.random() * digits.length);
+        result += digits[randIndex];
+    }
+
+    return 'guest' + result;
+}
+module.exports = { registerUser, loginUser, loginGuest };

@@ -5,7 +5,7 @@ const PrivateRoute = () => {
   const { token } = useAuth(); // Access auth state
 
   if (!token) {
-    return <Navigate to="/login" />; // Redirect if not authenticated
+    return <Navigate to="/" />; // Redirect if not authenticated
   }
 
   return <Outlet />; // Render the protected content (Dashboard)
