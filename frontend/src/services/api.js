@@ -23,7 +23,7 @@ api.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}  /auth/loginAsGuest`);
+        const res = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/auth/loginAsGuest`);
         const { token } = res.data;
 
         localStorage.setItem('jwtToken', token);
