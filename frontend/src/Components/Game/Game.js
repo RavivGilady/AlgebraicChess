@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { GameProvider } from '../../context/GameContext';
 import api from '../../services/api'
 import Layout from '../Layout/Layout';
 import MovePanel from '../MovePanel/MovePanel';
+import { useAuth } from '../../context/AuthContext';
 const Game = () => {
   const {setToken} = useAuth();
   const loginAsGuestUrl = `${process.env.REACT_APP_API_BASE_URL}/auth/loginAsGuest`;
