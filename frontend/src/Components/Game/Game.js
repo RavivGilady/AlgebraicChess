@@ -4,12 +4,15 @@ import api from '../../services/api'
 import Layout from '../Layout/Layout';
 import MovePanel from '../MovePanel/MovePanel';
 const Game = () => {
+  const {setToken} = useAuth();
+  const loginAsGuestUrl = `${process.env.REACT_APP_API_BASE_URL}/auth/loginAsGuest`;
     useEffect(() => {
       let token = localStorage.getItem("jwtToken");
       if (!token) { 
         api.get(loginAsGuestUrl)
           .then(res => {
             localStorage.setItem("jwtToken", res.data.token);
+            setToken(res.data.token);
           })
       }
     }, []);
