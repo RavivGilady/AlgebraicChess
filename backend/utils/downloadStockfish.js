@@ -61,8 +61,7 @@ const downloadStockfish = async () => {
     const isLinux = os.platform() === 'linux';
     if (isLinux) {
         const linuxUrl = 'https://github.com/official-stockfish/Stockfish/releases/latest/download/stockfish-linux-x86-64-modern';
-        const binaryPath = destDir.join(__dirname, '/stockfish');
-
+        const binaryPath = path.join(destDir, 'stockfish');
         if (fs.existsSync(binaryPath)) {
             console.log('Stockfish binary already exists. Skipping download.');
             return;
