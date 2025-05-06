@@ -3,8 +3,12 @@
     "version": "1.0.0",
     "scripts": {
         "setup": "node setup.js",
-        "start": "concurrently \"cd backend && npm start\" \"cd frontend && npm start\"",
-        "debug": "concurrently \"cd backend && npm run debug\" \"cd frontend && npm start\""
+        "start": "concurrently -n BACKEND,FRONTEND -c yellow,cyan \"cd backend && npm start\" \"cd frontend && npm start\"",
+        "debug": "concurrently \"cd backend && npm run debug\" \"cd frontend && npm start\"",
+        "install:frontend": "cd frontend && npm install",
+        "install:backend": "cd backend && npm install",
+        "preinstall": "npm run install:backend && npm run install:frontend",
+        "postinstall": "cd backend && npm run postinstall"
     },
     "dependencies": {
         "unzipper": "^0.12.3"

@@ -1,6 +1,6 @@
 
 const { Chess } = require('chess.js');
-const runStockfish = require('../stockfish.js');
+const runStockfish = require("../utils/stockfish.js")
 const Player = require('./Player.js');
 
 function isValidNumber(input) {

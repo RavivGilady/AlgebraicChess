@@ -56,12 +56,12 @@ const cleanUpExtractedFiles = (extractedDir) => {
 
 // Function to download and unzip Stockfish binary
 const downloadStockfish = async () => {
-    const destDir = path.join(__dirname, '../stockfishBinary');
+    const destDir = path.join(__dirname, './stockfishBinary');
     const os = require('os');
     const isLinux = os.platform() === 'linux';
     if (isLinux) {
         const linuxUrl = 'https://github.com/official-stockfish/Stockfish/releases/latest/download/stockfish-linux-x86-64-modern';
-        const binaryPath = destDir.join(__dirname, '../stockfish');
+        const binaryPath = destDir.join(__dirname, '/stockfish');
 
         if (fs.existsSync(binaryPath)) {
             console.log('Stockfish binary already exists. Skipping download.');

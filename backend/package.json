@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon server.js",
-    "debug": "nodemon --inspect=9229 server.js"
-
+    "debug": "nodemon --inspect=9229 server.js",
+    "postinstall": "node ./utils/downloadStockfish.js"
   },
   "keywords": [],
   "author": "",
