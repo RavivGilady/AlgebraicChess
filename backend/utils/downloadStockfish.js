@@ -1,6 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const https = require('https');
+const { execSync } = require('child_process');
 
 const downloadFile = (url, dest) => {
     return new Promise((resolve, reject) => {
