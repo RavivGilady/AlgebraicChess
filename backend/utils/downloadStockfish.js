@@ -61,20 +61,29 @@ const downloadStockfish = async () => {
     const isLinux = os.platform() === 'linux';
     if (isLinux) {
         const linuxUrl = 'https://github.com/official-stockfish/Stockfish/releases/latest/download/stockfish-ubuntu-x86-64.tar';
+        const tarPath = path.join(__dirname, 'stockfish.tar'); // temp tar path
         const binaryPath = path.join(destDir, 'stockfish');
+
         if (fs.existsSync(binaryPath)) {
             console.log('Stockfish binary already exists. Skipping download.');
             return;
-        }
-
-        fs.mkdirSync(path.dirname(binaryPath), { recursive: true });
-
-        console.log('Downloading Stockfish for Linux...');
-        await downloadFile(linuxUrl, binaryPath);
-
-        // Make it executable
-        fs.chmodSync(binaryPath, 0o755);
-        console.log('Linux Stockfish ready.');
+          }
+          
+          fs.mkdirSync(destDir, { recursive: true });
+          
+          console.log('Downloading Stockfish for Linux...');
+          await downloadFile(linuxUrl, tarPath);
+          
+          // Extract the .tar file
+          console.log('Extracting Stockfish...');
+          execSync(`tar -xf ${tarPath} -C ${destDir}`);
+          
+          // Make sure the binary is executable
+          fs.chmodSync(binaryPath, 0o755);
+          console.log('Linux Stockfish ready.');
+          
+          // Optional: cleanup
+          fs.unlinkSync(tarPath);
     }
     else if (os.platform() === 'win32') {
     const stockfishUrl = 'https://github.com/official-stockfish/Stockfish/releases/latest/download/stockfish-windows-x86-64-sse41-popcnt.zip';
