@@ -35,10 +35,10 @@ server.listen(PORT, () => {
   logger.info(`listening on *:${PORT}`)
 });
 
-connectDb()
-    .then(() => logger.info('Database connected successfully'))
-    .catch(err => {
-        logger.error(`Database connection failed:, ${err}`);
-        process.exit(1);
-    });
+// connectDb()
+//     .then(() => logger.info('Database connected successfully'))
+//     .catch(err => {
+//         logger.error(`Database connection failed:, ${err}`);
+//         process.exit(1);
+//     });
 
