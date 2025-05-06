@@ -24,14 +24,14 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 }));
-app.use('/auth',authRoutes)
-app.use('/game',gameRoutes)
+app.use('/auth', authRoutes)
+app.use('/game', gameRoutes)
 
 io.attach(server)
 
 
 
-server.listen(PORT, () => {
+server.listen(PORT, '0.0.0.0', () => {
   logger.info(`listening on *:${PORT}`)
 });
 
