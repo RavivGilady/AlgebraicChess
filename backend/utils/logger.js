@@ -7,9 +7,23 @@ fs.mkdirSync(logDir, { recursive: true });
 
 const logStream = fs.createWriteStream(path.join(logDir, 'access.log'), { flags: 'a' });
 
+// Format date in Israel time (Asia/Jerusalem)
+const getIsraelTimestamp = () => {
+  return new Intl.DateTimeFormat('en-IL', {
+    timeZone: 'Asia/Jerusalem',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
+  }).format(new Date());
+};
+
 const logMessage = (level, message) => {
   if (process.env.LOG_LEVEL === level || true) {
-    const logEntry = `${new Date().toISOString()} - ${message}\n`;
+    const logEntry = `${getIsraelTimestamp()} - ${message}\n`;
     logStream.write(logEntry);
   }
 };

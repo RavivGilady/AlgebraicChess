@@ -18,7 +18,6 @@ export const GameProvider = ({ gameId,children }) => {
 
 
   useEffect(() => {
-    console.log("creating socket")
     const newSocket = io(serverUrl, {
           auth: {
             token: token,
