@@ -5,8 +5,9 @@ const jwt = require("jsonwebtoken");
 
 const io = new Server({
   cors: {
-    origin: "*", // customize this for production
-    methods: ["GET", "POST"]
+    origin: "https://algebric-chess.vercel.app",
+    methods: ["GET", "POST"],
+    credentials: true
   }
 });
 

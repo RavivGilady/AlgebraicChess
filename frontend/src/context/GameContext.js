@@ -1,17 +1,17 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
-import {useAuth} from './AuthContext'
+import { useAuth } from './AuthContext'
 
 const GameContext = createContext();
 export const useGame = () => useContext(GameContext);
 
-export const GameProvider = ({ gameId,children }) => {
-  const { token , serverUrl} = useAuth();
+export const GameProvider = ({ gameId, children }) => {
+  const { token, serverUrl } = useAuth();
   const [gameState, setGameState] = useState({
     board: null,
     moves: [],
     lastMove: null,
-    isItMyTurn:false
+    isItMyTurn: false
   });
   const [socket, setSocket] = useState(null);
   const [nextMoveId, setNextMoveId] = useState(null);
@@ -19,12 +19,15 @@ export const GameProvider = ({ gameId,children }) => {
 
   useEffect(() => {
     const newSocket = io(serverUrl, {
-          auth: {
-            token: token,
-            gameId:gameId
+      auth: {
+        token: token,
+        gameId: gameId
 
-          },
-        });
+      },
+      transports: ["websocket"],
+      withCredentials: true
+
+    });
     setSocket(newSocket);
 
     newSocket.once('gameId', () => newSocket.emit('connect to game', gameId))
@@ -37,31 +40,31 @@ export const GameProvider = ({ gameId,children }) => {
 
     });
     newSocket.on('bad move', (badMove) => {
-     console.log(`Bad Move: ${badMove}`)
-      });
+      console.log(`Bad Move: ${badMove}`)
+    });
     newSocket.on('make move', (newMoveId) => {
-        setNextMoveId(newMoveId)
-        setGameState(prev => ({
-            ...prev,
-            isItMyTurn : true
-        }))
+      setNextMoveId(newMoveId)
+      setGameState(prev => ({
+        ...prev,
+        isItMyTurn: true
+      }))
     })
     return () => newSocket.disconnect();
   }, []);
 
   const sendMoveToServer = (move) => {
     if (socket) {
-        socket.emit(`move ${nextMoveId}`, move)
-        setGameState(prev => ({
-            ...prev,
-            isItMyTurn: false
-          }));
+      socket.emit(`move ${nextMoveId}`, move)
+      setGameState(prev => ({
+        ...prev,
+        isItMyTurn: false
+      }));
     }
   };
-useEffect(()=> console.log(`moves list: ${JSON.stringify(gameState.moves)}`),[gameState.moves])
+  useEffect(() => console.log(`moves list: ${JSON.stringify(gameState.moves)}`), [gameState.moves])
 
   return (
-    <GameContext.Provider value={{ gameState, setGameState,sendMoveToServer }}>
+    <GameContext.Provider value={{ gameState, setGameState, sendMoveToServer }}>
       {children}
     </GameContext.Provider>
   );
