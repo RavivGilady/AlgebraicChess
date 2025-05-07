@@ -66,7 +66,8 @@ const downloadStockfish = async () => {
         const binaryPath = path.join(destDir, 'stockfish');
 
         if (fs.existsSync(binaryPath)) {
-            console.log('Stockfish binary already exists. Skipping download.');
+            console.log('Stockfish binary already exists. Skipping download & changing permission to existing in order to make sure its ok.');
+            fs.chmodSync(binaryPath, 0o755);
             return;
           }
           
