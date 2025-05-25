@@ -32,6 +32,13 @@ const downloadFile = (url, dest) => {
     });
 };
 
+const  getBinaryName = () => {
+  if (process.platform === 'win32') return 'stockfish-windows-x86-64-sse41-popcnt.exe';
+  if (process.platform === 'linux') return 'stockfish-ubuntu-x86-64';
+  return 'stockfish'; // fallback
+}
+
+
 // Function to move binary file from the extracted folder to backend/stockfishBinary
 const moveBinaryFile = (extractedDir, destinationDir) => {
     const binaryName = 'stockfish-windows-x86-64-sse41-popcnt.exe';
@@ -142,8 +149,4 @@ downloadStockfish()
     .catch((error) => console.error('Error downloading Stockfish:', error));
 
 exports.downloadStockfish = downloadStockfish;
-exports.getBinaryName = () => {
-  if (process.platform === 'win32') return 'stockfish-windows-x86-64-sse41-popcnt.exe';
-  if (process.platform === 'linux') return 'stockfish-ubuntu-x86-64';
-  return 'stockfish'; // fallback
-};
+exports.getBinaryName = getBinaryName;
