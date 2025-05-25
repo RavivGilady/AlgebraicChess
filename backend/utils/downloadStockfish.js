@@ -64,7 +64,7 @@ const downloadStockfish = async () => {
     const linuxUrl = 'https://github.com/official-stockfish/Stockfish/releases/latest/download/stockfish-ubuntu-x86-64.tar';
     const tarPath = path.join(__dirname, 'stockfish.tar'); // temp tar path
     const extractedBinary = path.join(destDir, 'stockfish', 'stockfish-ubuntu-x86-64');
-    const finalBinary = path.join(destDir, 'stockfish');
+    const finalBinary = path.join(destDir, 'stockfish-linux');
 
     if (fs.existsSync(finalBinary)) {
       console.log('Stockfish binary already exists. Skipping download & fixing permissions.');
