@@ -57,50 +57,54 @@ const cleanUpExtractedFiles = (extractedDir) => {
 
 // Function to download and unzip Stockfish binary
 const downloadStockfish = async () => {
-    const destDir = path.join(__dirname, './stockfishBinary');
+  const destDir = path.join(__dirname, './stockfishBinary');
     const os = require('os');
     const isLinux = os.platform() === 'linux';
-    if (isLinux) {
-        const linuxUrl = 'https://github.com/official-stockfish/Stockfish/releases/latest/download/stockfish-ubuntu-x86-64.tar';
-        const tarPath = path.join(__dirname, 'stockfish.tar'); // temp tar path
-        const binaryPath = path.join(destDir, 'stockfish');
+  if (isLinux) {
+    const linuxUrl = 'https://github.com/official-stockfish/Stockfish/releases/latest/download/stockfish-ubuntu-x86-64.tar';
+    const tarPath = path.join(__dirname, 'stockfish.tar'); // temp tar path
+    const extractedBinary = path.join(destDir, 'stockfish', 'stockfish-ubuntu-x86-64');
+    const finalBinary = path.join(destDir, 'stockfish');
 
-        if (fs.existsSync(binaryPath)) {
-            console.log('Stockfish binary already exists. Skipping download & changing permission to existing in order to make sure its ok.');
-            fs.chmodSync(binaryPath, 0o755);
-            return;
-          }
-          
-          fs.mkdirSync(destDir, { recursive: true });
-          
-          console.log('Downloading Stockfish for Linux...');
-          await downloadFile(linuxUrl, tarPath);
-          
-          // Extract the .tar file
-          console.log('Extracting Stockfish...');
-          execSync(`tar -xf ${tarPath} -C ${destDir}`);
-          
-          // Make sure the binary is executable
-          fs.chmodSync(binaryPath, 0o755);
-          console.log('Linux Stockfish ready.');
-          
-          // Optional: cleanup
-          fs.unlinkSync(tarPath);
+    if (fs.existsSync(finalBinary)) {
+      console.log('Stockfish binary already exists. Skipping download & fixing permissions.');
+      fs.chmodSync(finalBinary, 0o755);
+      return;
     }
-    else if (os.platform() === 'win32') {
+
+    fs.mkdirSync(destDir, { recursive: true });
+
+    console.log('Downloading Stockfish for Linux...');
+    await downloadFile(linuxUrl, tarPath);
+
+    console.log('Extracting Stockfish...');
+    execSync(`tar -xf "${tarPath}" -C "${destDir}"`);
+
+    if (!fs.existsSync(extractedBinary)) {
+      throw new Error(`Expected binary not found at ${extractedBinary}`);
+    }
+
+    // Move to flatten structure
+    fs.renameSync(extractedBinary, finalBinary);
+
+    // Make it executable
+    fs.chmodSync(finalBinary, 0o755);
+    console.log('✅ Linux Stockfish is ready at:', finalBinary);
+
+    fs.unlinkSync(tarPath);
+  }
+  else if (os.platform() === 'win32') {
     const stockfishUrl = 'https://github.com/official-stockfish/Stockfish/releases/latest/download/stockfish-windows-x86-64-sse41-popcnt.zip';
     const zipFilePath = path.join(destDir, 'stockfish.zip');
     const finalBinaryPath = path.join(destDir, 'stockfish-windows-x86-64-sse41-popcnt.exe');
 
-    // Check if Stockfish binary already exists
     if (fs.existsSync(finalBinaryPath)) {
-        console.log('Stockfish binary already exists. Skipping download.');
-        return;
+      console.log('Stockfish binary already exists. Skipping download.');
+      return;
     }
 
-    console.log('Downloading Stockfish binary...');
-
-    // Ensure the stockfishBinary directory exists
+    console.log('Downloading Stockfish binary for Windows...');
+ // Ensure the stockfishBinary directory exists
     if (!fs.existsSync(destDir)) {
         fs.mkdirSync(destDir, { recursive: true });
     }
@@ -113,10 +117,10 @@ const downloadStockfish = async () => {
     const unzipper = require('unzipper'); // Require only when needed
 
     await new Promise((resolve, reject) => {
-        fs.createReadStream(zipFilePath)
-            .pipe(unzipper.Extract({ path: destDir }))
-            .on('close', resolve)
-            .on('error', reject);
+      fs.createReadStream(zipFilePath)
+        .pipe(unzipper.Extract({ path: destDir }))
+        .on('close', resolve)
+        .on('error', reject);
     });
 
     console.log('Stockfish binary extracted.');
