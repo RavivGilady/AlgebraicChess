@@ -60,13 +60,14 @@ const downloadStockfish = async () => {
   const destDir = path.join(__dirname, './stockfishBinary');
     const os = require('os');
     const isLinux = os.platform() === 'linux';
+    const finalBinary = path.join(__dirname, 'stockfishBinary', getBinaryName());
+
   if (isLinux) {
     const linuxUrl = 'https://github.com/official-stockfish/Stockfish/releases/latest/download/stockfish-ubuntu-x86-64.tar';
     const tarPath = path.join(__dirname, 'stockfish.tar'); // temp tar path
     const extractedBinary = path.join(destDir, 'stockfish', 'stockfish-ubuntu-x86-64');
-    const finalBinary = path.join(destDir, 'stockfish-linux');
 
-    if (fs.existsSync(finalBinary)) {
+    if (fs.existsSync(fibinarynalBinary)) {
       console.log('Stockfish binary already exists. Skipping download & fixing permissions.');
       fs.chmodSync(finalBinary, 0o755);
       return;
@@ -96,9 +97,8 @@ const downloadStockfish = async () => {
   else if (os.platform() === 'win32') {
     const stockfishUrl = 'https://github.com/official-stockfish/Stockfish/releases/latest/download/stockfish-windows-x86-64-sse41-popcnt.zip';
     const zipFilePath = path.join(destDir, 'stockfish.zip');
-    const finalBinaryPath = path.join(destDir, 'stockfish-windows-x86-64-sse41-popcnt.exe');
 
-    if (fs.existsSync(finalBinaryPath)) {
+    if (fs.existsSync(finalBinary)) {
       console.log('Stockfish binary already exists. Skipping download.');
       return;
     }
@@ -142,3 +142,8 @@ downloadStockfish()
     .catch((error) => console.error('Error downloading Stockfish:', error));
 
 exports.downloadStockfish = downloadStockfish;
+exports.getBinaryName = () => {
+  if (process.platform === 'win32') return 'stockfish-windows-x86-64-sse41-popcnt.exe';
+  if (process.platform === 'linux') return 'stockfish-ubuntu-x86-64';
+  return 'stockfish'; // fallback
+};

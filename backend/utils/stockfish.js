@@ -1,15 +1,8 @@
 const { spawn } = require('child_process');
 const path = require('path');
+const {getBinaryName} = require('./getBinaryName');
 
-// Path to the Stockfish binary
-const os = require('os');
-const isWindows = os.platform() === 'win32';
-
-const stockfishPath = path.join(
-  __dirname,
-  'stockfishBinary',
-  isWindows ? 'stockfish-windows-x86-64-sse41-popcnt.exe' : 'stockfish'
-);
+const stockfishPath = path.join(__dirname,'stockfishBinary',getBinaryName());
 // Function to send a command to Stockfish and get the response
 function sendCommand(engine, command, expectResponse = true) {
     return new Promise((resolve, reject) => {
