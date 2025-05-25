@@ -1,6 +1,6 @@
 const { spawn } = require('child_process');
 const path = require('path');
-const {getBinaryName} = require('./getBinaryName');
+const {getBinaryName} = require('./downloadStockfish');
 
 const stockfishPath = path.join(__dirname,'stockfishBinary',getBinaryName());
 // Function to send a command to Stockfish and get the response
