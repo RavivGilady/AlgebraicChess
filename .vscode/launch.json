@@ -7,7 +7,14 @@
         "request": "attach",
         "port": 9229,
         "restart": true
-      }
+      },
+        {
+      "name": "Chrome Debug",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}/src"
+    }
     ]
   }
   

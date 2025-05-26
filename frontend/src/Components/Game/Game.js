@@ -6,11 +6,11 @@ import MovePanel from '../MovePanel/MovePanel';
 import { useAuth } from '../../context/AuthContext';
 const Game = () => {
   const {setToken} = useAuth();
-  const loginAsGuestUrl = `${process.env.REACT_APP_API_BASE_URL}/auth/loginAsGuest`;
+  const loginAsGuestUrl = '/auth/loginAsGuest';
     useEffect(() => {
       let token = localStorage.getItem("jwtToken");
       if (!token) { 
-        api.get(loginAsGuestUrl)
+      api.get(loginAsGuestUrl)
           .then(res => {
             localStorage.setItem("jwtToken", res.data.token);
             setToken(res.data.token);
@@ -21,7 +21,7 @@ const Game = () => {
     const [opponentElo, setOpponentElo] = useState(null);
 
     const handleStartGame = async () => {
-        const response = await api.get(`${process.env.REACT_APP_API_BASE_URL}/game/startGameBot`, {
+        const response = await api.get('/game/startGameBot', {
             params: { elo: 2000 },
         }); 
         setGameId(response.data.gameId);
