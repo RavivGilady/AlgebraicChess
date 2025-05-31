@@ -7,8 +7,7 @@
         "debug": "concurrently -n BACKEND,FRONTEND -c yellow,cyan \"cd backend && npm run debug\" \"cd frontend && npm start\"",
         "install:frontend": "cd frontend && npm install",
         "install:backend": "cd backend && npm install",
-        "preinstall": "npm run install:backend && npm run install:frontend",
-        "postinstall": "cd backend && npm run postinstall"
+        "preinstall": "npm run install:backend && npm run install:frontend"
     },
     "dependencies": {
         "unzipper": "^0.12.3"
