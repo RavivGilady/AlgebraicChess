@@ -6,6 +6,7 @@ const http = require('http');
 const server = http.createServer(app);
 const { connectDb } = require('./config/db');
 const loggingMiddleware = require('./middlewares/loggerMiddleware')
+const { startBotMovesConsumer } = require('./services/botPlayManager');
 
 const PORT = process.env.PORT || 5000;
 const authRoutes = require('./routes/auth')
@@ -42,3 +43,11 @@ server.listen(PORT, '0.0.0.0', () => {
 //         process.exit(1);
 //     });
 
+startBotMovesConsumer()
+  .then(() => logger.info('BotPlayManager is ready'))
+  .catch((err) => {
+    logger.error('BotPlayManager startup failed:', err.message);
+    process.exit(1);  
+  });
+
+  

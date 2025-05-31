@@ -5,7 +5,7 @@
         "name": "Attach to Backend",
         "type": "node",
         "request": "attach",
-        "port": 9229,
+        "port": 9230,
         "restart": true
       },
         {
@@ -14,7 +14,14 @@
       "request": "launch",
       "url": "http://localhost:3000",
       "webRoot": "${workspaceFolder}/src"
-    }
+    },
+    {
+        "name": "Attach to bot-service",
+        "type": "node",
+        "request": "attach",
+        "port": 9231,
+        "restart": true
+      }
     ]
   }
   

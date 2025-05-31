@@ -1,0 +1,18 @@
+{
+  "name": "bot-service",
+  "version": "1.0.0",
+  "description": "service that runs stockfish and serves best moves",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js",
+    "debug": "nodemon --inspect=9231 index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Raviv Gilady",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "kafkajs": "^2.2.4",
+    "nodemon": "^3.1.10"
+  }
+}
