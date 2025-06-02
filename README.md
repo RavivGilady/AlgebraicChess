@@ -11,7 +11,7 @@ A real-time, multiplayer chess application built with a microservices architectu
 - **Kafka** as a message broker for bot move processing
 - **Backend** API using **Node.js + Express**
 - **Bot Service** wrapping **Stockfish** chess engine for AI gameplay
-- **Frontend** Usin React – Needs to improve (currently basic for MVP)
+- **Frontend** Using React – Needs to improve (currently basic for MVP)
 
 ### 📦 Core Components
 
