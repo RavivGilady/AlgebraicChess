@@ -7,7 +7,8 @@ function assignMoveIdToBotPlayer(moveId, player) {
 }
 const kafka = new Kafka({
     clientId: 'game-server',
-    brokers: ['kafka:9092'],
+    // Use the environment variable for brokers or default to localhost
+    brokers: process.env.KAFKA_BROKERS ? process.env.KAFKA_BROKERS.split(',') : ['localhost:9092']
 });
 async function startBotMovesConsumer() {
 

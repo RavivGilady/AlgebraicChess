@@ -5,7 +5,7 @@ const logger = require('../utils/logger');
 
 const kafka = new Kafka({
     clientId: 'bot-service',
-    brokers: [process.env.KAFKA_BROKER || 'localhost:9092'],
+    brokers: process.env.KAFKA_BROKERS ? process.env.KAFKA_BROKERS.split(',') : ['localhost:9092']
 });
 
 const consumer = kafka.consumer({ groupId: 'stockfish-bots' }); 
