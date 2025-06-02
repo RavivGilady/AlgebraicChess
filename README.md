@@ -19,10 +19,14 @@ A real-time, multiplayer chess application built with a microservices architectu
 |----------------  |--------------------------------------------|
 | `backend/`       | Main server handling game logic & sockets  |
 | `bot-service/`   | Kafka consumer + Stockfish bot move engine |
-| `frontend/`      | Frontend in React(                         |
+| `frontend/`      | Frontend in React                          |
 | `infra/`         | Docker Compose files (Kafka, backend, bot) |
-| `Kafka/Zookeeper`| Messaging system (via Docker)              |
 
+### 🔧 Infrastructure 
+
+| Service         | Purpose                                |
+|----------------|----------------------------------------|
+| `Kafka/Zookeeper` | Messaging system for microservices     |
 ---
 
 ## 🚀 Setup
