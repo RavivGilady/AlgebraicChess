@@ -1,5 +1,5 @@
 {
-    "name": "Algebric-chess",
+    "name": "algebric-chess",
     "version": "1.0.0",
     "scripts": {
         "start": "concurrently -n BACKEND,FRONTEND -c yellow,cyan \"cd backend && npm start\" \"cd frontend && npm start\"",
