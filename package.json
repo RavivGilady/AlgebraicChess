@@ -2,7 +2,6 @@
     "name": "Algebric-chess",
     "version": "1.0.0",
     "scripts": {
-        "setup": "node setup.js",
         "start": "concurrently -n BACKEND,FRONTEND -c yellow,cyan \"cd backend && npm start\" \"cd frontend && npm start\"",
         "debug": "concurrently -n BACKEND,FRONTEND -c yellow,cyan \"cd backend && npm run debug\" \"cd frontend && npm start\"",
         "install:frontend": "cd frontend && npm install",
