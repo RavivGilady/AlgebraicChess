@@ -7,7 +7,7 @@
         "install:frontend": "cd frontend && npm install",
         "install:backend": "cd backend && npm install",
         "install:bot-service": "cd bot-service && npm install",
-        "preinstall": "npm run install:backend && npm run install:frontend && install:bot-service"
+        "preinstall": "npm run install:backend && npm run install:frontend && npm run install:bot-service"
     },
     "dependencies": {
         "unzipper": "^0.12.3"
