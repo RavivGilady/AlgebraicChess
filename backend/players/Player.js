@@ -18,7 +18,6 @@ class Player {
   }
   getPlayerDetails(){
     throw new Error("getPlayerDetails must be implemented by subclasses");
-
   }
   
 }

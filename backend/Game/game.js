@@ -1,6 +1,6 @@
 const { Chess } = require('chess.js')
 const { v4: uuidv4 } = require('uuid');
-
+const logger = require('../utils/logger')
 
 
 class Game {
@@ -22,16 +22,20 @@ class Game {
         else if (this.whitePlayer == null) {
             this.whitePlayer = player;
         }
-        else {
+        else if (this.blackPlayer == null) {
             this.blackPlayer = player;
         }
+        else {
+            logger.error(`Game ${this.gameId} already has two players!`)
+            return;
+        }
+        logger.info(`Player ${JSON.stringify(player.getPlayerDetails())} added to game ${this.gameId} as ${this.whitePlayer == player ? 'white' : 'black'}`)
 
     }
     areAllPlayersSet() {
         return this.whitePlayer != null && this.blackPlayer != null;
     }
     startGame() {
-        console.log(`move id for start ${this.currentMoveId}`)
         this.whitePlayer.setOnMoveCallback(data => this.makeMove(this.whitePlayer, { "move": data.move, "moveId": data.moveId }));
         this.whitePlayer.setColor('white');
         this.blackPlayer.setOnMoveCallback(data => this.makeMove(this.blackPlayer, { "move": data.move, "moveId": data.moveId }));
