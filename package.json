@@ -1,14 +1,23 @@
 {
     "name": "algebric-chess",
     "version": "1.0.0",
-    "scripts": {
-        "start": "concurrently -n BACKEND,FRONTEND -c yellow,cyan \"cd backend && npm start\" \"cd frontend && npm start\"",
-        "debug": "concurrently -n BACKEND,FRONTEND -c yellow,cyan \"cd backend && npm run debug\" \"cd frontend && npm start\"",
-        "install:frontend": "cd frontend && npm install",
-        "install:backend": "cd backend && npm install",
-        "install:bot-service": "cd bot-service && npm install",
-        "preinstall": "npm run install:backend && npm run install:frontend && npm run install:bot-service"
-    },
+"scripts": {
+  "start:frontend": "cd frontend && npm start",
+  "start:backend": "cd backend && npm start",
+  "start:bot": "cd bot-service && npm start",
+ 
+  "debug:frontend": "npm run start:frontend",
+  "debug:backend": "cd backend && npm run debug",
+  "debug:bot": "npm run start:bot",
+
+  "start": "concurrently -n BACKEND,FRONTEND,BOT -c yellow,cyan,magenta \"npm run start:backend\" \"npm run start:frontend\" \"npm run start:bot\"",
+  "debug": "concurrently -n BACKEND,FRONTEND,BOT -c yellow,cyan,magenta \"npm run debug:backend\" \"npm run debug:frontend\" \"npm run debug:bot\"",
+
+  "install:frontend": "cd frontend && npm install",
+  "install:backend": "cd backend && npm install",
+  "install:bot": "cd bot-service && npm install",
+  "preinstall": "npm run install:backend && npm run install:frontend && npm run install:bot"
+},
     "dependencies": {
         "unzipper": "^0.12.3"
     },
