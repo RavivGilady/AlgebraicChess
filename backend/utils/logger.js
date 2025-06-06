@@ -1,12 +1,11 @@
 const fs = require('fs');
 const path = require('path');
 const logDir = path.join(__dirname, '../logs');
-// Make sure the directory exists
+
 fs.mkdirSync(logDir, { recursive: true });
 
 const logStream = fs.createWriteStream(path.join(logDir, 'main.log'), { flags: 'a' });
 
-// Format date in Israel time (Asia/Jerusalem)
 const getIsraelTimestamp = () => {
   return new Intl.DateTimeFormat('en-IL', {
     timeZone: 'Asia/Jerusalem',
@@ -22,10 +21,19 @@ const getIsraelTimestamp = () => {
 
 const logMessage = (level, message) => {
   if (process.env.LOG_LEVEL === level || true) {
-    const logEntry = `${getIsraelTimestamp()} - ${message}\n`;
+    const logEntry = `${getIsraelTimestamp()} - ${getCallerInfo()} - ${message}\n`;
     logStream.write(logEntry);
   }
 };
+function getCallerInfo() {
+  const stack = new Error().stack.split('\n')[4]; // [4] is the caller
+  const match = stack.match(/\(([^)]+)\)/); // extract content inside parentheses
+  const fullPath = match ? match[1] : stack.trim();
+
+  // Use regex to extract file, line, and column
+  const parts = fullPath.match(/(.*[\\/])?([^\\/]+:\d+:\d+)/);
+  return parts ? parts[2] : fullPath;
+}
 
 module.exports = {
   trace: (message) => logMessage('trace', message),
