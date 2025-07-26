@@ -60,22 +60,35 @@ npm run start:bot
 
 ## 🧩 Kafka and Docker Usage (Microservices Only)
 
-### Option A – Run Kafka Only (for local dev with manual services)
+### Option A – Run Kafka Only (for local dev using `npm`)
 
-Use this if you want Kafka running in Docker, but frontend/backend/bot run via `npm`.
+Use this when developing services locally (`npm start`) but still needing Kafka.
 
+#### 🧪 Start Kafka & ZooKeeper only:
 ```bash
-docker compose -f infra/docker-compose.yml up -d kafka zookeeper
+docker compose -f docker-compose.kafka.yml up -d
 ```
 
-In your `.env` files (backend, bot-service), set:
+This will:
+- Start Kafka and ZooKeeper
+- Expose Kafka on `localhost:9092` (for your VM or host OS)
+
+> ⚠️ You may need to edit `KAFKA_ADVERTISED_LISTENERS` in `docker-compose.kafka.yml` to match your **VM IP** (e.g. `192.168.80.128`)
+
+#### 🛑 To stop cleanly:
+```bash
+docker compose -f docker-compose.kafka.yml down -v
+```
+Always use `-v` to avoid stale ZooKeeper state.
+
+Then start your services as usual:
+```bash
+npm start
+```
+
+Set Kafka env in your `.env` files:
 ```env
-KAFKA_BROKER_URL=localhost:9092
-```
-
-🛑 **Don't forget to stop Docker when switching modes**:
-```bash
-docker compose -f infra/docker-compose.yml down
+KAFKA_BROKER_URL=192.168.80.128:9092
 ```
 
 ---
