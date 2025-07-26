@@ -1,34 +1,105 @@
-Currently in order to make environment ready (Currently only windows x64, because of stockfish binary download), we need to run
-```bash
-npm run setup
-```
+# ♟️ Algebraic Chess
 
-In order to start both server & client:
-```bash
+A real-time, multiplayer chess application built with a microservices architecture. It supports human-vs-human (SOON!) and human-vs-bot gameplay using Stockfish, Kafka, and a modern web stack.
+
+---
+
+## 🌐 Tech Stack
+
+### 🧩 Architecture
+- **Microservices** powered by **Docker Compose**
+- **Kafka** as a message broker for bot move processing
+- **Backend** API using **Node.js + Express**
+- **Bot Service** wrapping **Stockfish** chess engine for AI gameplay
+- **Frontend** Using React – Needs to improve (currently basic for MVP)
+
+### 📦 Core Components
+
+| Component        | Description                                |
+|----------------  |--------------------------------------------|
+| `backend/`       | Main server handling game logic & sockets  |
+| `bot-service/`   | Kafka consumer + Stockfish bot move engine |
+| `frontend/`      | Frontend in React                          |
+| `infra/`         | Docker Compose files (Kafka, backend, bot) |
+
+### 🔧 Infrastructure 
+
+| Service         | Purpose                                |
+|----------------|----------------------------------------|
+| `Kafka/Zookeeper` | Messaging system for microservices     |
+---
+
+## 🚀 Setup
+
+> Make sure Docker is installed and running.
+
+```
+cd infra
+docker compose up --build
+```
+> Alternatively, you can start services manually for development:
+### 1. Install dependencies
+
+```
+npm install
+cd bot-service && npm install
+```
+### 2. Start Kafka
+
+Start Kafka on your host (no matter how you'd like it)
+
+
+### 3. Start full environment (backend + frontend + bot)
+
+Start backend + frontend:
+
+```
 npm start
 ```
 
-Game Mechanism:
-- [ ] Basic matchmaking between two players who wish to play against a human player
-- [ ] Creating a game against a bot, specifying its elo
+Start bot service:
 
-Frontend:
-- [ ] Enable a user to start a game against a human/bot
-- [ ] Managing a game for the user
+```
+cd bot-service && npm start
+```
 
-Backend:
-- [ ] Add support for google/facebook/chess.com(is that a thing?) authentication
-- [ ] Add support for requesting user data
-- [ ] Add support for viewing user's games
-- [ ] Save a game once it's over
+---
 
-General Project:
-- [ ] Make setup script os agnostic
-- [ ] Improve Readme
+## 📡 Kafka Integration
 
-Far Future Backlog:
-- [ ] Researching adding more variety of bots as in chess.com (Stockfish is using elo and depth, where elo is minimum 1350)
-- [ ] Create a different entity for managing games using Redis for in-memory db for ongoing games
-- [ ] Research advanced matchmaking based on elo. Maybe use another entity to create this matchmaking (Again using Redis)
-- [ ] Create sub-processes for bot players so that server won't rely on bot's fast/slow response for games
-- [ ] Pre-moves support
+- The **backend** sends a message to Kafka whenever a bot move is needed.
+- The **bot-service** listens to the Kafka topic, calculates the move using Stockfish, and sends it back to the server.
+
+---
+
+## 🐳 Docker
+
+Each service has its own Dockerfile and is managed via `infra/docker-compose.yml`.
+
+To rebuild images when code changes:
+
+```
+docker compose build
+```
+
+To shut everything down:
+
+```
+docker compose down
+```
+
+---
+
+## 🛠️ TODO
+
+- [ ] Improve Frontend sigificantly
+- [ ] Deploy using AWS Fargate
+- [ ] Unit and integration testing
+- [ ] Add matchmaking between two people
+- [ ] Complete support for live game between two people
+
+---
+
+## 📄 License
+
+MIT © Raviv Gilady
