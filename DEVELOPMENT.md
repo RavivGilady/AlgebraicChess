@@ -102,7 +102,7 @@ KeeperErrorCode = NodeExists
 
 ## 🔐 Environment Variables
 
-Example contents for each service:
+Example contents for each service: (Might not be updated! check .env.example in each service folder!)
 
 ### 📁 backend/.env.example
 ```env
