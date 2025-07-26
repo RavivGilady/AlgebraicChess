@@ -13,6 +13,8 @@
   "start": "concurrently -n BACKEND,FRONTEND,BOT -c yellow,cyan,magenta \"npm run start:backend\" \"npm run start:frontend\" \"npm run start:bot\"",
   "debug": "concurrently -n BACKEND,FRONTEND,BOT -c yellow,cyan,magenta \"npm run debug:backend\" \"npm run debug:frontend\" \"npm run debug:bot\"",
 
+  "setup": "node scripts/prepareEnv.js",
+
   "install:frontend": "cd frontend && npm install",
   "install:backend": "cd backend && npm install",
   "install:bot": "cd bot-service && npm install",
@@ -24,4 +26,5 @@
     "devDependencies": {
         "concurrently": "^9.1.0"
     }
+
 }
