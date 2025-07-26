@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const services = ['backend', 'frontend'];
+const services = ['backend', 'frontend', 'bot-service'];
 
 services.forEach(dir => {
   const envPath = path.join(__dirname, '..', dir, '.env');
