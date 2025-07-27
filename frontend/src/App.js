@@ -1,17 +1,12 @@
-import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, } from 'react-router-dom';
-import Home from './Components/Home/Home';
 // import Auth from './Components/Auth/Auth';
 import { AuthProvider } from './context/AuthContext'
 import Game from './Components/Game/Game';
 import PrivateRoute from './Components/PrivateRoute/PrivateRoute';
 import { Navigate, useLocation } from "react-router-dom";
 
-const loginAsGuestUrl = '/auth/loginAsGuest';
 
 function App() {
-
-
 
   return (
     <AuthProvider>
@@ -23,7 +18,6 @@ function App() {
             element={<RedirectToGame />}
           />          {/* <Route path="/login" element={<Auth mode="login" />} />
           <Route path="/register" element={<Auth mode="register" />} /> */}
-
           {/* Protected routes */}
           <Route element={<PrivateRoute />}>
             <Route path="/game" element={<Game />} />

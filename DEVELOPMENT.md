@@ -154,6 +154,69 @@ REACT_APP_API_BASE_URL=http://localhost:5000
 
 ---
 
+## 🔒 Authentication System (AuthContext)
+
+The app uses a custom React Context (`AuthContext`) to manage user authentication globally.
+
+---
+
+### 🧠 How It Works
+
+- The `AuthProvider` component wraps the entire app inside `App.js`
+- It uses React hooks (`useContext`, `useState`, `useMemo`) to manage and expose auth state
+- It reads the JWT token from `localStorage` on load
+
+---
+
+### 🌍 What It Stores
+
+| Variable    | Description                                                                 |
+|-------------|-----------------------------------------------------------------------------|
+| `token`     | JWT string stored in `localStorage` and React state                         |
+| `setToken`  | Function to update the token (login/logout)                                 |
+| `username`  | Decoded from the JWT payload (uses `atob` on the middle part of the token)  |
+| `serverUrl` | The backend base URL from `.env` (`REACT_APP_API_BASE_URL`)                 |
+
+---
+
+### 🧪 Using Auth in Components
+
+To access the auth state in any component:
+
+```js
+import { useAuth } from '../../context/AuthContext';
+
+const { token, setToken, username, serverUrl } = useAuth();
+```
+
+---
+
+### 🛡️ Route Protection
+
+The `PrivateRoute` component uses `useAuth()` to block unauthenticated users:
+
+```jsx
+const PrivateRoute = () => {
+  const { token } = useAuth();
+
+  if (!token) {
+    return <Navigate to="/" />;
+  }
+
+  return <Outlet />;
+};
+```
+
+---
+
+### ⚠️ Notes
+
+- The JWT is decoded with `atob()` but **not validated** (e.g. no signature or expiration checks)
+- You can plug in a real JWT library if you need secure decoding and validation
+- This is a lightweight solution good for local and dev use
+
+---
+
 ## ⚠️ Troubleshooting
 
 | Problem                                  | Cause                                                | Solution                                                               |
@@ -175,9 +238,23 @@ REACT_APP_API_BASE_URL=http://localhost:5000
 
 ## 🗂️ Branch Notes
 
+
 | Branch           | Description                    |
 |------------------|--------------------------------|
 | `master`         | Monolithic (frontend + backend) |
 | `microservices`  | Kafka + bot-service split       |
+---
+
+## 🚀 Migration Plan
+
+The `microservices` branch introduces a scalable, event-driven architecture using Kafka, separate bot service, and updated Docker orchestration.
+
+Once the microservice-based version is production-ready, it will be **merged into `master`**, replacing the monolithic version.
+
+Until then:
+- Use `master` for local development with no Kafka
+- Use `microservices` for real-time, scalable features
+
+Make sure `.env.example`, setup scripts, and documentation are kept in sync between branches when applicable.
 
 ---
