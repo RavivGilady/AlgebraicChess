@@ -44,9 +44,9 @@ npm start
 ```
 
 Runs:
-- **Frontend** → http://localhost:3000
-- **Backend** → http://localhost:5000
-- **Bot-service** → localhost port defined in service code
+- **Frontend** → http://localhost:3000  
+- **Backend** → http://localhost:5000  
+- **Bot-service** → Runs locally and connects to Kafka
 
 To run/debug services individually:
 
@@ -58,7 +58,27 @@ npm run start:bot
 
 ---
 
-## 🧩 Kafka and Docker Usage (Microservices Only)
+## 🔧 NPM Scripts Reference
+
+These scripts help you run the app in development mode. Kafka must be running separately (see next section).
+
+### 🧪 Dev Commands
+
+| Command              | Description                                                   |
+|----------------------|---------------------------------------------------------------|
+| `npm start`          | Start all services concurrently (frontend, backend, bot)      |
+| `npm run start:backend` | Start backend service                                        |
+| `npm run start:frontend`| Start frontend service                                       |
+| `npm run start:bot`     | Start bot-service                                            |
+| `npm run debug`         | Start all services in debug mode                            |
+| `npm run setup`         | Generate `.env` files if missing from `.env.example`        |
+| `npm install`           | Install dependencies for all services                       |
+| `npm run kafka:standalone` | Start Kafka + ZooKeeper using `docker-compose.kafka.yml` |
+| `npm run dev-down`      | Stop Kafka (and ZooKeeper) and remove volumes               |
+
+---
+
+## 🐘 Kafka and Docker Usage (Microservices Only)
 
 ### Option A – Run Kafka Only (for local dev using `npm`)
 
@@ -66,27 +86,23 @@ Use this when developing services locally (`npm start`) but still needing Kafka.
 
 #### 🧪 Start Kafka & ZooKeeper only:
 ```bash
-docker compose -f docker-compose.kafka.yml up -d
+npm run kafka:standalone
 ```
 
 This will:
-- Start Kafka and ZooKeeper
-- Expose Kafka on `localhost:9092` (for your VM or host OS)
+- Start Kafka and ZooKeeper using `docker-compose.kafka.yml`
+- Expose Kafka on `localhost:9092` (or your VM IP)
 
 > ⚠️ You may need to edit `KAFKA_ADVERTISED_LISTENERS` in `docker-compose.kafka.yml` to match your **VM IP** (e.g. `192.168.80.128`)
 
 #### 🛑 To stop cleanly:
 ```bash
-docker compose -f docker-compose.kafka.yml down -v
-```
-Always use `-v` to avoid stale ZooKeeper state.
-
-Then start your services as usual:
-```bash
-npm start
+npm run dev-down
 ```
 
-Set Kafka env in your `.env` files:
+This shuts down Kafka and ZooKeeper and clears volumes (important!).
+
+Make sure your services use the correct Kafka address in their `.env`:
 ```env
 KAFKA_BROKER_URL=192.168.80.128:9092
 ```
@@ -115,7 +131,8 @@ KeeperErrorCode = NodeExists
 
 ## 🔐 Environment Variables
 
-Example contents for each service: (Might not be updated! check .env.example in each service folder!)
+Example contents for each service:  
+(Might not be updated! Check `.env.example` in each service folder.)
 
 ### 📁 backend/.env.example
 ```env
@@ -140,19 +157,19 @@ REACT_APP_API_BASE_URL=http://localhost:5000
 ## ⚠️ Troubleshooting
 
 | Problem                                  | Cause                                                | Solution                                                               |
-| ---------------------------------------- | ---------------------------------------------------- | ---------------------------------------------------------------------- |
-| ❌ No response from server                | Expired/invalid JWT token in localStorage            | Dev Tools → Application tab → Local Storage → delete token → refresh   |
+|------------------------------------------|-------------------------------------------------------|------------------------------------------------------------------------|
+| ❌ No response from server                | Expired/invalid JWT token in localStorage            | Dev Tools → Application → Local Storage → delete token → refresh       |
 | 🐘 Kafka `NodeExistsException` error     | Stale ZooKeeper state (from unclean Kafka shutdown)  | Run `docker compose -f infra/docker-compose.yml down -v`               |
 | 🛑 Port conflicts or Kafka not reachable | Forgot to stop Docker before switching to local mode | Run `docker compose -f infra/docker-compose.yml down` before switching |
-
 
 ---
 
 ## 🧠 Notes
 
 - All `.env` creation is handled via `npm run setup`
-- You can use this project in full Docker mode or with local dev + Kafka
+- The project supports both full Docker and mixed local/Docker dev environments
 - The master branch is monolithic (no Kafka), while the `microservices` branch includes Kafka and service separation
+- `wait-on` was removed for flexibility; services should retry Kafka connection internally
 
 ---
 

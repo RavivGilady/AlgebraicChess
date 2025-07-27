@@ -1,30 +1,28 @@
 {
     "name": "algebric-chess",
     "version": "1.0.0",
-"scripts": {
-  "start:frontend": "cd frontend && npm start",
-  "start:backend": "cd backend && npm start",
-  "start:bot": "cd bot-service && npm start",
- 
-  "debug:frontend": "npm run start:frontend",
-  "debug:backend": "cd backend && npm run debug",
-  "debug:bot": "npm run start:bot",
-
-  "start": "concurrently -n BACKEND,FRONTEND,BOT -c yellow,cyan,magenta \"npm run start:backend\" \"npm run start:frontend\" \"npm run start:bot\"",
-  "debug": "concurrently -n BACKEND,FRONTEND,BOT -c yellow,cyan,magenta \"npm run debug:backend\" \"npm run debug:frontend\" \"npm run debug:bot\"",
-
-  "setup": "node scripts/prepareEnv.js",
-
-  "install:frontend": "cd frontend && npm install",
-  "install:backend": "cd backend && npm install",
-  "install:bot": "cd bot-service && npm install",
-  "preinstall": "npm run install:backend && npm run install:frontend && npm run install:bot"
-},
+    "scripts": {
+        "start:frontend": "cd frontend && npm start",
+        "start:backend": "node scripts/waitForKafka.js backend && cd backend && npm start",
+        "start:bot": "node scripts/waitForKafka.js bot-service && cd bot-service && npm start",
+        "debug:frontend": "npm run start:frontend",
+        "debug:backend": "cd backend && npm run debug",
+        "debug:bot": "npm run start:bot",
+        "start": "concurrently -n BACKEND,FRONTEND,BOT -c yellow,cyan,magenta \"npm run start:backend\" \"npm run start:frontend\" \"npm run start:bot\"",
+        "debug": "concurrently -n BACKEND,FRONTEND,BOT -c yellow,cyan,magenta \"npm run debug:backend\" \"npm run debug:frontend\" \"npm run debug:bot\"",
+        "setup": "node scripts/prepareEnv.js",
+        "install:frontend": "cd frontend && npm install",
+        "install:backend": "cd backend && npm install",
+        "install:bot": "cd bot-service && npm install",
+        "preinstall": "npm run install:backend && npm run install:frontend && npm run install:bot",
+        "kafka:standalone": "docker compose -f docker-compose.kafka.yml up -d",
+        "dev-down": "docker compose -f docker-compose.kafka.yml down --remove-orphans"
+    },
     "dependencies": {
+        "dotenv": "^17.2.1",
         "unzipper": "^0.12.3"
     },
     "devDependencies": {
         "concurrently": "^9.1.0"
     }
-
 }
