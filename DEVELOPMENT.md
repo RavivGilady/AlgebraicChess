@@ -37,7 +37,7 @@ This will install frontend, backend, and bot-service dependencies using the `pre
 
 ### 3. Start the App (Local Mode)
 
-Runs all services via `npm` directly (not Docker):
+Runs all services via `npm` directly (not Docker): **Note that you need to have kafka working and setting up all env variables as needed, see steps below**
 
 ```bash
 npm start
