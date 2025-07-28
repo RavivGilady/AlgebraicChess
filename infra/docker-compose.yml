@@ -1,7 +1,7 @@
 services:
   zookeeper:
     container_name: zookeeper
-    image: confluentinc/cp-zookeeper
+    image: confluentinc/cp-zookeeper:7.5.0
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
@@ -9,7 +9,7 @@ services:
   kafka:
     container_name: kafka
 
-    image: confluentinc/cp-kafka
+    image: confluentinc/cp-kafka:7.5.0
     ports:
       - "9092:9092"
     environment:
