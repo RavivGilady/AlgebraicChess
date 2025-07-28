@@ -1,7 +1,7 @@
 
 const { Chess } = require('chess.js');
-const runStockfish = require("../utils/stockfish.js")
 const Player = require('./Player.js');
+const {assignMoveIdToBotPlayer, sendMoveRequest} = require('../services/botPlayManager.js');
 
 function isValidNumber(input) {
     const num = Number(input);
@@ -22,6 +22,7 @@ class BotPlayer extends Player {
         this.elo = elo
         this.board = new Chess();
         this.onMove = null;
+        this.nextMoveId = null;
     }
 
 
@@ -29,18 +30,28 @@ class BotPlayer extends Player {
         this.onMove = callback
     }
     requestMove(nextMoveId) {
+        this.nextMoveId = nextMoveId;
+        assignMoveIdToBotPlayer(nextMoveId, this);
+        sendMoveRequest({
+            moveId: nextMoveId,
+            fen: this.board.fen(),
+            elo: this.elo   
+        }).catch(err => {
+            logger.error("Failed to send move request:", err);
+           
+        });
 
-        return runStockfish(this.elo, this.board.fen()).then((move) =>
-            setTimeout(() => {
-                this.onMove({"move":move,"moveId":nextMoveId})
-            }, 0)
-        )
     }
     
+    handleMoveFromBroker(move) {
+        this.onMove({"move":move,"moveId":this.nextMoveId})
+    }    
     notifyMove(move) {
         this.board.move(move.move)
     }
     notifyBadMove(move) {
+        //enter retry logic here
+        logger.error("BotPlayer received bad move from engine:", move);
         throw new Error("Engine gave bad move somehow");
     }
     getPlayerDetails(){

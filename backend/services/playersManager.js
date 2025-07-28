@@ -6,9 +6,9 @@ function registerAsPlayer (username, elo, socket, gameId) {
     let player = new HumanPlayer(socket, { username: username, elo: elo })
     registerToGame(player,gameId)
 }
-async function createBotToGame (elo, gameId)  {
+function createBotToGame (elo, gameId)  {
     let botPlayer = new BotPlayer(elo)
-    registerToGame (botPlayer, gameId)
+    registerToGame(botPlayer, gameId)
 }
 
 

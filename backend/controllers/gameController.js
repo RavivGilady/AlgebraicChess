@@ -4,7 +4,7 @@ const { createBotToGame } = require('../services/playersManager')
 
 const gameAgainstBot = async function (botElo, res) {
     let newGameId = createGame()
-    await createBotToGame(botElo, newGameId)
+    createBotToGame(botElo, newGameId)
     res.send({ gameId: newGameId })
 }
 

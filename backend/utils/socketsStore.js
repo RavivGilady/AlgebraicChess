@@ -15,19 +15,17 @@ const io = new Server({
 io.use((socket, next) => {
   const token = socket.handshake.auth.token;
   const gameId = socket.handshake.auth.gameId
-  logger.info(JSON.stringify(socket.handshake.auth))
   if (!token) {
     logger.error("Authentication error")
     return next(new Error("Authentication error"));
   }
   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-  logger.trace(JSON.stringify(user))
     if (!gameId) {
       logger.error("No game id provided to socket")
       return next(new Error("Non existing game id property"));
     }
     if (err) {
-      logger.error("Invalid token")
+      logger.error(`Invalid token, error: ${err.message}`);
       return next(new Error("Invalid token"));
     }
     logger.error(`User ${JSON.stringify(user)} created socket for game id ${gameId} `)
@@ -39,7 +37,6 @@ io.use((socket, next) => {
 
 // Setup connection handlers
 io.on("connection", (socket) => {
-  logger.info(`New connection:${JSON.stringify(socket.user.username)}`);
   registerAsPlayer(socket.user.username, socket.user.elo, socket, socket.gameId)
 
   socket.on("disconnect", () => {

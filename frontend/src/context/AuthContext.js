@@ -1,4 +1,5 @@
-import { createContext, useContext, useState, useMemo } from "react";
+import { createContext, useContext, useState, useMemo, useEffect} from "react";
+import axios from 'axios';
 
 // Optional: use a lightweight decoder (no validation)
 
@@ -19,7 +20,25 @@ export const AuthProvider = ({ children }) => {
       return null;
     }
   }, [token]);
+  // 🔑 Auto-login as guest if no token
+  useEffect(() => {
+    const loginAsGuest = async () => {
+      try {
+        const res = await axios.get(`${serverUrl}/auth/loginAsGuest`);
+        const guestToken = res.data.token;
+        if (guestToken) {
+          localStorage.setItem("jwtToken", guestToken);
+          setToken(guestToken);
+        }
+      } catch (err) {
+        console.error("Guest login failed:", err);
+      }
+    };
 
+    if (!token) {
+      loginAsGuest();
+    }
+  }, [token, serverUrl]);
   return (
     <AuthContext.Provider value={{ token, setToken, username, serverUrl }}>
       {children}

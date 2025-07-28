@@ -1,11 +1,14 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 import { useAuth } from './AuthContext'
+import { useNavigate } from "react-router-dom";
 
 const GameContext = createContext();
 export const useGame = () => useContext(GameContext);
 
 export const GameProvider = ({ gameId, children }) => {
+    const navigate = useNavigate();
+
   const { token, serverUrl } = useAuth();
   const [gameState, setGameState] = useState({
     board: null,
@@ -49,6 +52,13 @@ export const GameProvider = ({ gameId, children }) => {
         isItMyTurn: true
       }))
     })
+    //handle connect error to redirect to login page
+    newSocket.on('connect_error', (err) => {
+      console.error(`Connection error: ${err.message}`);
+      navigate('/'); 
+    });
+
+    
     return () => newSocket.disconnect();
   }, []);
 
