@@ -18,6 +18,11 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_HEAP_OPTS: "-Xmx512M -Xms512M"
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "9092"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
     depends_on:
       - zookeeper
 
@@ -32,11 +37,14 @@ services:
     env_file:
       - .env.backend
     depends_on:
-    - kafka
+      kafka:
+        condition: service_healthy
+
 
   bot-service:
     build: ../bot-service
     environment:
       - KAFKA_BROKERS=kafka:9092
     depends_on:
-      - kafka
+      kafka:
+        condition: service_healthy
