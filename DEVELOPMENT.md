@@ -231,30 +231,6 @@ const PrivateRoute = () => {
 
 - All `.env` creation is handled via `npm run setup`
 - The project supports both full Docker and mixed local/Docker dev environments
-- The master branch is monolithic (no Kafka), while the `microservices` branch includes Kafka and service separation
-- `wait-on` was removed for flexibility; services should retry Kafka connection internally
 
 ---
 
-## 🗂️ Branch Notes
-
-
-| Branch           | Description                    |
-|------------------|--------------------------------|
-| `master`         | Monolithic (frontend + backend) |
-| `microservices`  | Kafka + bot-service split       |
----
-
-## 🚀 Migration Plan
-
-The `microservices` branch introduces a scalable, event-driven architecture using Kafka, separate bot service, and updated Docker orchestration.
-
-Once the microservice-based version is production-ready, it will be **merged into `master`**, replacing the monolithic version.
-
-Until then:
-- Use `master` for local development with no Kafka
-- Use `microservices` for real-time, scalable features
-
-Make sure `.env.example`, setup scripts, and documentation are kept in sync between branches when applicable.
-
----
