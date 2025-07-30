@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import './MoveInput.css';
 
 const MoveInput = ({ onSubmit }) => {
   const [move, setMove] = useState('');
@@ -21,15 +20,16 @@ const MoveInput = ({ onSubmit }) => {
     }
   };
   return (
-    <input
-      type="text"
-      value={move}
-      onChange={handleChange}
-      onKeyDown={handleKeyDown} // Add the keydown event listener
-          required
-      className={active ? 'active' : ''}
-
-    />
+   <input
+  type="text"
+  value={move}
+  onChange={handleChange}
+  onKeyDown={handleKeyDown}
+  required
+  className={`w-full text-move-input text-inputText bg-background border-2 border-accent rounded-md p-2 outline-none focus:ring-2 focus:ring-accent transition ${
+    active ? 'opacity-100' : 'opacity-50'
+  }`}
+/>
   );
 };
 

@@ -1,11 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { GameProvider } from '../../context/GameContext';
 import api from '../../services/api'
 import Layout from '../Layout/Layout';
 import MovePanel from '../MovePanel/MovePanel';
-import { useAuth } from '../../context/AuthContext';
 const Game = () => {
-  const {setToken} = useAuth();
     const [gameId, setGameId] = useState(null);
     const [opponentElo, setOpponentElo] = useState(null);
 
