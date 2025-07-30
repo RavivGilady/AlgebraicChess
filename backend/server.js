@@ -20,7 +20,7 @@ const cors = require('cors');
 app.use(express.json());
 app.use(loggingMiddleware.logHttpRequests)
 app.use(cors({
-  origin: ['http://localhost:3000', 'https://algebric-chess.vercel.app'], // include both dev & prod
+  origin: ['http://localhost:5173', 'https://algebric-chess.vercel.app'], // include both dev & prod
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true

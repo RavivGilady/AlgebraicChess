@@ -36,14 +36,14 @@ const TopBar = () => {
   }, [gameState.moves]);
 
   const bgOpacity = hovered
-    ? "bg-background/100"
+    ? "bg-accent/100"
     : recentlyUpdated
-    ? "bg-background/80"
-    : "bg-background/30";
+    ? "bg-accent/80"
+    : "bg-accent/30";
 
   return (
     <Card
-      className={`fixed top-0 w-full z-10 transition-all duration-300 px-4 py-2 ${bgOpacity}`}
+  className={`fixed top-0 w-full z-10 transition-all duration-300 px-4 py-2 min-h-[40px] ${bgOpacity}`}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >

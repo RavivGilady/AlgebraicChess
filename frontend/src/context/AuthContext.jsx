@@ -9,7 +9,7 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem("jwtToken") || null);
-  const serverUrl =  process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000';
+  const serverUrl =  import.meta.env.VITE_API_BASE_URL  || 'http://localhost:5000';
 
   const username = useMemo(() => {
     if (!token) return null;
