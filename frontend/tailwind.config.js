@@ -13,7 +13,7 @@ module.exports = {
         background: '#FFF0DC',
         accent: '#F0BB78',
         inputText: '#543A14',
-        dark: '#131010',
+        dark: '#  ',
       },
       fontSize: {
         'move-input': '72pt',
@@ -29,10 +29,20 @@ module.exports = {
           to: { height: "0" },
         },
       },
-      animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
-      },
+       animation: {
+    'fade-in': 'fadeIn 0.3s ease-out forwards',
+    'fade-out': 'fadeOut 0.2s ease-in forwards',
+  },
+  keyframes: {
+    fadeIn: {
+      '0%': { opacity: '0' },
+      '100%': { opacity: '1' },
+    },
+    fadeOut: {
+      '0%': { opacity: '1' },
+      '100%': { opacity: '0' },
+    },
+  },
     },
   },
   plugins: [require("tailwindcss-animate")],

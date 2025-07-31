@@ -1,11 +1,23 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { GameProvider } from '../../context/GameContext';
 import api from '../../services/api'
 import Layout from '../Layout/Layout';
 import MovePanel from '../MovePanel/MovePanel';
+import BoardDialog from '../boardDialog/boardDialog';
 const Game = () => {
     const [gameId, setGameId] = useState(null);
     const [opponentElo, setOpponentElo] = useState(null);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+    useEffect(() => {
+    if (!isDialogOpen) return;
+
+    const timer = setTimeout(() => {
+      setIsDialogOpen(false);
+    }, 2000);
+
+    return () => clearTimeout(timer); // Reset timer on repeated opens
+  }, [isDialogOpen]);
 
     const handleStartGame = async () => {
         const response = await api.get('/game/startGameBot', {
@@ -29,8 +41,9 @@ const Game = () => {
             </div>
           ) : (
             <GameProvider key={gameId} gameId={gameId} opponentElo={opponentElo}>
-              <Layout handleStartGame={handleStartGame}>
+              <Layout handleStartGame={handleStartGame} openDialog={() => setIsDialogOpen(true)}>
                 <MovePanel />
+              <BoardDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} />
               </Layout >
             </GameProvider>
           )}
