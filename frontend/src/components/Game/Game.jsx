@@ -3,11 +3,21 @@ import { GameProvider } from '../../context/GameContext';
 import api from '../../services/api'
 import Layout from '../Layout/Layout';
 import MovePanel from '../MovePanel/MovePanel';
-import { useAuth } from '../../context/AuthContext';
+import BoardDialog from '../boardDialog/boardDialog';
 const Game = () => {
-  const {setToken} = useAuth();
     const [gameId, setGameId] = useState(null);
     const [opponentElo, setOpponentElo] = useState(null);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+    useEffect(() => {
+    if (!isDialogOpen) return;
+
+    const timer = setTimeout(() => {
+      setIsDialogOpen(false);
+    }, 2000);
+
+    return () => clearTimeout(timer); // Reset timer on repeated opens
+  }, [isDialogOpen]);
 
     const handleStartGame = async () => {
         const response = await api.get('/game/startGameBot', {
@@ -31,19 +41,10 @@ const Game = () => {
             </div>
           ) : (
             <GameProvider key={gameId} gameId={gameId} opponentElo={opponentElo}>
-              <Layout>
-                {/* Restart button - aligned under TopBar */}
-                <div className="w-full flex justify-end px-6 pt-16">
-                  <button 
-                    onClick={handleStartGame}
-                    className="px-4 py-2 bg-[#543A14] text-white rounded-xl shadow hover:bg-[#6b4b1b] transition"
-                  >
-                    Restart Game
-                  </button>
-                </div>
-      
+              <Layout handleStartGame={handleStartGame} openDialog={() => setIsDialogOpen(true)}>
                 <MovePanel />
-              </Layout>
+              <BoardDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} />
+              </Layout >
             </GameProvider>
           )}
         </div>

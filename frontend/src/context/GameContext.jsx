@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 import { useAuth } from './AuthContext'
 import { useNavigate } from "react-router-dom";
-
+import { Chess } from 'chess.js';
 const GameContext = createContext();
 export const useGame = () => useContext(GameContext);
 
@@ -11,10 +11,11 @@ export const GameProvider = ({ gameId, children }) => {
 
   const { token, serverUrl } = useAuth();
   const [gameState, setGameState] = useState({
-    board: null,
+    board: new Chess(),
     moves: [],
     lastMove: null,
-    isItMyTurn: false
+    isItMyTurn: false,
+    
   });
   const [socket, setSocket] = useState(null);
   const [nextMoveId, setNextMoveId] = useState(null);
@@ -35,11 +36,18 @@ export const GameProvider = ({ gameId, children }) => {
 
     newSocket.once('gameId', () => newSocket.emit('connect to game', gameId))
     newSocket.on('move made', (move) => {
-      setGameState(prev => ({
+    
+      
+      setGameState(prev => {
+            const board = new Chess(prev.board.fen());
+            /*const result= */ board.move(move.move);
+        return{
         ...prev,
+        board:board,
         lastMove: move,
-        moves: [...prev.moves, move]
-      }));
+        moves: [...prev.moves, move],
+      };
+      });
 
     });
     newSocket.on('bad move', (badMove) => {

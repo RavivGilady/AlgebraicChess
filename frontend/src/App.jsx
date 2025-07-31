@@ -1,8 +1,8 @@
 import { BrowserRouter as Router, Route, Routes, } from 'react-router-dom';
 // import Auth from './Components/Auth/Auth';
 import { AuthProvider } from './context/AuthContext'
-import Game from './Components/Game/Game';
-import PrivateRoute from './Components/PrivateRoute/PrivateRoute';
+import Game from './components/Game/Game';
+import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 import { Navigate, useLocation } from "react-router-dom";
 
 

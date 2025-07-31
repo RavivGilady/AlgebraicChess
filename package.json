@@ -2,9 +2,10 @@
     "name": "algebric-chess",
     "version": "1.0.0",
     "scripts": {
-        "start:frontend": "cd frontend && npm start",
+        "start:frontend": "cd frontend && npm run dev",
         "start:backend": "node scripts/waitForKafka.js backend && cd backend && npm start",
         "start:bot": "node scripts/waitForKafka.js bot-service && cd bot-service && npm start",
+        "start:wholeBackend": "concurrently -n BACKEND,BOT -c cyan,magenta \"npm run start:backend\" \" npm run start:bot\"",
         "debug:frontend": "npm run start:frontend",
         "debug:backend": "cd backend && npm run debug",
         "debug:bot": "npm run start:bot",
@@ -16,7 +17,7 @@
         "install:bot": "cd bot-service && npm install",
         "preinstall": "npm run install:backend && npm run install:frontend && npm run install:bot",
         "kafka:standalone": "docker compose -f docker-compose.kafka.yml up -d",
-        "dev-down": "docker compose -f docker-compose.kafka.yml down --remove-orphans"
+        "dev-down": "docker compose -f docker-compose.kafka.yml down --remove-orphans"        
     },
     "dependencies": {
         "dotenv": "^17.2.1",
