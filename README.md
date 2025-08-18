@@ -1,9 +1,11 @@
 # ♟️ Algebraic Chess
 
-> ⚡ **Highlights for Interviewers**  
-> 🔹 Full microservices app deployed to AWS EC2  
-> 🔹 Secured with Nginx + HTTPS via Certbot  
-> 🔹 Uses Kafka, Docker Compose, Elastic IP, and custom domain
+---
+## ⚡ Highlights for Interviewers
+
+ 🔹 Full microservices app deployed to AWS EC2  
+ 🔹 Secured with Nginx + HTTPS via Certbot  
+ 🔹 Uses Kafka, Docker Compose, Elastic IP, and custom domain
 
 A real-time, multiplayer chess application built with a microservices architecture. It supports human-vs-human (SOON!) and human-vs-bot gameplay using Stockfish, Kafka, and a modern web stack.
 
