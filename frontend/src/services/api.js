@@ -1,44 +1,47 @@
-import axios from 'axios';
+import axios from "axios";
 
+const baseURL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
-const baseURL =   import.meta.env.VITE_API_BASE_URL  || 'http://localhost:5000';
-const api = axios.create({
-  baseURL: baseURL
-});
+// One axios instance used everywhere
+const api = axios.create({ baseURL });
 
-// Attach token to each request
+// Attach token from localStorage to every request
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('jwtToken');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+  const t = localStorage.getItem("jwtToken");
+  if (t) {
+    config.headers = config.headers ?? {};
+    config.headers.Authorization = `Bearer ${t}`;
   }
   return config;
 });
 
-// Handle 401 errors
+// On 401, try a guest login once and retry the original request
 api.interceptors.response.use(
-  (response) => response,
+  (res) => res,
   async (error) => {
-    const originalRequest = error.config;
+    const original = error.config;
+    if (!error.response || original?._retry) return Promise.reject(error);
+    if (original?.url?.includes("/auth/loginAsGuest"))
+      return Promise.reject(error);
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-
+    if (error.response.status === 401) {
+      original._retry = true;
       try {
-        const res = await axios.get(`${baseURL}/auth/loginAsGuest`);
-        const { token } = res.data;
-
-        localStorage.setItem('jwtToken', token);
-
-        originalRequest.headers.Authorization = `Bearer ${token}`;
-        return api(originalRequest); // Retry original request
-      } catch (refreshError) {
-        console.error('Token refresh failed', refreshError);
+        const r = await axios.get(`${baseURL}/auth/loginAsGuest`);
+        const newToken = r?.data?.token;
+        if (newToken) {
+          localStorage.setItem("jwtToken", newToken);
+          original.headers = original.headers ?? {};
+          original.headers.Authorization = `Bearer ${newToken}`;
+          return api(original); // retry with fresh token
+        }
+      } catch (e) {
+        console.error("Guest login failed:", e);
       }
     }
-
     return Promise.reject(error);
   }
 );
 
 export default api;
+export { api };

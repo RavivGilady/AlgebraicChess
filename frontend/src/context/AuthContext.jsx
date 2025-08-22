@@ -1,47 +1,94 @@
-import { createContext, useContext, useState, useMemo, useEffect} from "react";
-import axios from 'axios';
-
-// Optional: use a lightweight decoder (no validation)
-
-const AuthContext = createContext();
-
+import {
+  createContext,
+  useContext,
+  useMemo,
+  useState,
+  useCallback,
+  useEffect,
+  use,
+} from "react";
+import api from "../services/api"; // Adjust the import path as necessary
+const AuthContext = createContext(null);
 export const useAuth = () => useContext(AuthContext);
+const serverUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
-export const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(localStorage.getItem("jwtToken") || null);
-  const serverUrl =  import.meta.env.VITE_API_BASE_URL  || 'http://localhost:5000';
+function decodeJwt(t) {
+  try {
+    return JSON.parse(atob(t.split(".")[1]));
+  } catch {
+    return null;
+  }
+}
+function isExpired(t, skew = 15) {
+  const p = decodeJwt(t);
+  return p?.exp ? p.exp * 1000 - Date.now() <= skew * 1000 : false;
+}
 
-  const username = useMemo(() => {
-    if (!token) return null;
-    try {
-
-      return token ? JSON.parse(atob(token.split('.')[1])).username : null;
-    } catch {
-      return null;
+export function AuthProvider({ children }) {
+  const [token, setToken] = useState(() => localStorage.getItem("jwtToken"));
+  const claims = useMemo(() => (token ? decodeJwt(token) : null), [token]);
+  const user = claims ? { username: claims.username } : null;
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const setAndStoreToken = useCallback((t) => {
+    if (t) {
+      localStorage.setItem("jwtToken", t);
+      setToken(t);
+    } else {
+      localStorage.removeItem("jwtToken");
+      setToken(null);
     }
-  }, [token]);
-  // 🔑 Auto-login as guest if no token
+  }, []);
+
+  const loginAsGuest = useCallback(async () => {
+    setIsLoading(true);
+    const r = await api.get("/auth/loginAsGuest");
+    const t = r?.data?.token;
+    if (t) setAndStoreToken(t);
+    return t ?? null;
+  }, [setAndStoreToken]);
+
+  useEffect(() => {}, [token]);
+  const logout = useCallback(() => setAndStoreToken(null), [setAndStoreToken]);
+
   useEffect(() => {
-    const loginAsGuest = async () => {
-      try {
-        const res = await axios.get(`${serverUrl}/auth/loginAsGuest`);
-        const guestToken = res.data.token;
-        if (guestToken) {
-          localStorage.setItem("jwtToken", guestToken);
-          setToken(guestToken);
-        }
-      } catch (err) {
-        console.error("Guest login failed:", err);
-      }
-    };
+    let timeoutId;
 
-    if (!token) {
-      loginAsGuest();
+    if (token) {
+      const payload = decodeJwt(token);
+      const expiresAt = payload?.exp ? payload.exp * 1000 : 0;
+
+      if (expiresAt > Date.now()) {
+        setIsAuthenticated(true);
+        setIsLoading(false);
+
+        // schedule auto-logout
+        timeoutId = setTimeout(() => {
+        console.log("Token expired, logging out");
+          setIsAuthenticated(false);
+          localStorage.removeItem("jwtToken");
+          setToken(null);
+        }, expiresAt - Date.now());
+      } else {
+        setIsAuthenticated(false);
+      }
+    } else {
+      setIsAuthenticated(false);
     }
-  }, [token, serverUrl]);
+
+    return () => clearTimeout(timeoutId);
+  }, [logout, token]);
+
   return (
-    <AuthContext.Provider value={{ token, setToken, username, serverUrl }}>
+    <AuthContext.Provider
+      value={{
+        isAuthenticated,
+        isLoading,
+        loginAsGuest,
+        logout,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
-};
+}

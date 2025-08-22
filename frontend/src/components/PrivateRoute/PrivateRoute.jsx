@@ -1,5 +1,5 @@
-import { useAuth } from '../../context/AuthContext'; // Use the custom hook here
-import { Navigate, Outlet } from 'react-router-dom';
+import { useAuth } from "../../context/AuthContext"; // Use the custom hook here
+import { Navigate, Outlet } from "react-router-dom";
 
 const PrivateRoute = () => {
   const { token } = useAuth(); // Access auth state
