@@ -64,7 +64,7 @@ export function AuthProvider({ children }) {
 
         // schedule auto-logout
         timeoutId = setTimeout(() => {
-        console.log("Token expired, logging out");
+          console.log("Token expired, logging out");
           setIsAuthenticated(false);
           localStorage.removeItem("jwtToken");
           setToken(null);
@@ -86,6 +86,8 @@ export function AuthProvider({ children }) {
         isLoading,
         loginAsGuest,
         logout,
+        serverUrl,
+        token,
       }}
     >
       {children}

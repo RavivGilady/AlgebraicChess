@@ -30,7 +30,6 @@ const Game = () => {
     return (
         <div className="min-h-screen w-full">
           {!gameId ? (
-            // Centered Start Game button
             <div className="flex justify-center items-center min-h-screen bg-[#F9DBBA]">
               <button 
                 onClick={handleStartGame}

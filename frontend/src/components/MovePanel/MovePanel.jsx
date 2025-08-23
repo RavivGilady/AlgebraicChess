@@ -2,7 +2,7 @@ import MoveInput from './MoveInput';
 import LastMove from './OpponentMove';
 import { useGame } from '../../context/GameContext';
 
-const MovePanel = () => {
+const   MovePanel = () => {
   const { gameState } = useGame();
 
   return (
