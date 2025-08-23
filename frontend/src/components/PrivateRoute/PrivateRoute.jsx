@@ -2,9 +2,9 @@ import { useAuth } from "../../context/AuthContext"; // Use the custom hook here
 import { Navigate, Outlet } from "react-router-dom";
 
 const PrivateRoute = () => {
-  const { token } = useAuth(); // Access auth state
+  const { isAuthenticated } = useAuth(); // Access auth state
 
-  if (!token) {
+  if (!isAuthenticated) {
     return <Navigate to="/" />; // Redirect if not authenticated
   }
 

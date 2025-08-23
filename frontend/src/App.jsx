@@ -11,18 +11,17 @@ function App() {
   if (!isAuthenticated) {
     return <Loading />;
   }
-
   return (
     <Router>
       <Routes>
         {/* Public routes */}
-        <Route path="/" element={<RedirectToGame />} />{" "}
+        <Route path="/" element={<RedirectToGame />} />
         {/* <Route path="/login" element={<Auth mode="login" />} />
           <Route path="/register" element={<Auth mode="register" />} /> */}
         {/* Protected routes */}
-        <Route element={<PrivateRoute />}>
-          <Route path="/game" element={<Game />} />
-        </Route>
+        {/* <Route element={<PrivateRoute />}> */}
+        <Route path="/game" element={<Game />} />
+        {/* </Route> */}
         {/* Catch-all */}
         {/* <Route path="*" element={<NotFound />} /> */}
       </Routes>
@@ -30,16 +29,11 @@ function App() {
   );
 }
 function RedirectToGame() {
-  const { token, loginAsGuest } = useAuth();
-  if (!token) {
-    // loginAsGuest();
-    return <Navigate to="/" replace />;
-  }
   const location = useLocation();
-
   if (location.pathname === "/game") {
     window.location.reload(); // Forces a reload if already at /game
     return null;
   }
+  return <Navigate to="/game" replace />;
 }
 export default App;
