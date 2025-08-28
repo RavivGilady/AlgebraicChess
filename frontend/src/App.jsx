@@ -30,10 +30,6 @@ function App() {
 }
 function RedirectToGame() {
   const location = useLocation();
-  if (location.pathname === "/game") {
-    window.location.reload(); // Forces a reload if already at /game
-    return null;
-  }
   return <Navigate to="/game" replace />;
 }
 export default App;

@@ -1,11 +1,12 @@
 // /src/components/MoveInput.jsx
-import React, { useState, useEffect, useRef } from "react";
-import { useGame } from "../../context/GameContext";
+import React, { useState, useEffect, useRef } from 'react';
+import { useGame } from '../../context/GameContext'
 
 const MoveInput = () => {
-  const { sendMoveToServer } = useGame();
+  const { sendMoveToServer } = useGame()
   const [move, setMove] = useState("");
   const inputRef = useRef(null);
+
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -14,7 +15,7 @@ const MoveInput = () => {
   const handleChange = (e) => {
     const value = e.target.value;
     // Allow only a-z, A-Z, 0-9, =, +, #
-    const filtered = value.replace(/[^a-zA-Z0-9-=+#]/g, "");
+  const filtered = value.replace(/[^a-zA-Z0-9-=+#]/g, "");
     setMove(filtered);
   };
 
@@ -24,6 +25,8 @@ const MoveInput = () => {
       setMove("");
     }
   };
+
+
 
   return (
     <input
@@ -42,3 +45,7 @@ const MoveInput = () => {
 };
 
 export default MoveInput;
+
+
+
+
