@@ -6,7 +6,6 @@ const { execSync } = require('child_process');
 const downloadFile = (url, dest) => {
     return new Promise((resolve, reject) => {
         https.get(url, (response) => {
-            // Handle redirection
             if (response.statusCode === 302 || response.statusCode === 301) {
                 console.log('Redirecting to', response.headers.location);
                 return resolve(downloadFile(response.headers.location, dest));
@@ -39,10 +38,9 @@ const  getBinaryName = () => {
 }
 
 
-// Function to move binary file from the extracted folder to backend/stockfishBinary
 const moveBinaryFile = (extractedDir, destinationDir) => {
     const binaryName = 'stockfish-windows-x86-64-sse41-popcnt.exe';
-    const sourcePath = path.join(extractedDir, 'stockfish', binaryName); // Inside 'stockfish' folder
+    const sourcePath = path.join(extractedDir, 'stockfish', binaryName); 
     const destinationPath = path.join(destinationDir, binaryName);
 
     if (fs.existsSync(sourcePath)) {
@@ -53,7 +51,6 @@ const moveBinaryFile = (extractedDir, destinationDir) => {
     }
 };
 
-// Function to delete all extracted content except the binary
 const cleanUpExtractedFiles = (extractedDir) => {
     const stockfishFolder = path.join(extractedDir, 'stockfish');
     if (fs.existsSync(stockfishFolder)) {
@@ -62,7 +59,6 @@ const cleanUpExtractedFiles = (extractedDir) => {
     }
 };
 
-// Function to download and unzip Stockfish binary
 const downloadStockfish = async () => {
   const destDir = path.join(__dirname, './stockfishBinary');
     const os = require('os');
@@ -92,10 +88,8 @@ const downloadStockfish = async () => {
       throw new Error(`Expected binary not found at ${extractedBinary}`);
     }
 
-    // Move to flatten structure
     fs.renameSync(extractedBinary, finalBinary);
 
-    // Make it executable
     fs.chmodSync(finalBinary, 0o755);
     console.log('✅ Linux Stockfish is ready at:', finalBinary);
 
@@ -116,12 +110,11 @@ const downloadStockfish = async () => {
         fs.mkdirSync(destDir, { recursive: true });
     }
 
-    // Download and extract Stockfish
     await downloadFile(stockfishUrl, zipFilePath);
     console.log('Stockfish ZIP downloaded successfully.');
     console.log('Extracting Stockfish binary...');
 
-    const unzipper = require('unzipper'); // Require only when needed
+    const unzipper = require('unzipper'); 
 
     await new Promise((resolve, reject) => {
       fs.createReadStream(zipFilePath)
@@ -132,13 +125,10 @@ const downloadStockfish = async () => {
 
     console.log('Stockfish binary extracted.');
 
-    // Move the binary from 'stockfish' folder inside the extracted path to backend/stockfishBinary
     moveBinaryFile(destDir, destDir);
 
-    // Clean up all extracted files except the binary
     cleanUpExtractedFiles(destDir);
 
-    // Clean up by removing the downloaded ZIP file
     fs.unlinkSync(zipFilePath);
     }
 

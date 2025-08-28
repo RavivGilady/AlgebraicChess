@@ -1,11 +1,11 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
-const services = ['backend', 'frontend', 'bot-service'];
+const services = ["server-service", "frontend", "bot-service"];
 
-services.forEach(dir => {
-  const envPath = path.join(__dirname, '..', dir, '.env');
-  const examplePath = path.join(__dirname, '..', dir, '.env.example');
+services.forEach((dir) => {
+  const envPath = path.join(__dirname, "..", dir, ".env");
+  const examplePath = path.join(__dirname, "..", dir, ".env.example");
 
   if (!fs.existsSync(envPath)) {
     if (fs.existsSync(examplePath)) {

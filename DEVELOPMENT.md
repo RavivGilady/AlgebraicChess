@@ -15,7 +15,7 @@ npm run setup
 ```
 
 This will:
-- Check for `.env` in `backend/`, `frontend/`, and `bot-service/`
+- Check for `.env` in `server-service/`, `frontend/`, and `bot-service/`
 - If `.env` is missing but `.env.example` exists, it will copy it
 - Ensure all services have what they need
 
@@ -31,7 +31,7 @@ From the root directory:
 npm install
 ```
 
-This will install frontend, backend, and bot-service dependencies using the `preinstall` script.
+This will install frontend, server-service, and bot-service dependencies using the `preinstall` script.
 
 ---
 
@@ -45,13 +45,13 @@ npm start
 
 Runs:
 - **Frontend** → http://localhost:3000  
-- **Backend** → http://localhost:5000  
+- **Server-Service** → http://localhost:5000  
 - **Bot-service** → Runs locally and connects to Kafka
 
 To run/debug services individually:
 
 ```bash
-npm run start:backend
+npm run start:server
 npm run start:frontend
 npm run start:bot
 ```
@@ -66,8 +66,8 @@ These scripts help you run the app in development mode. Kafka must be running se
 
 | Command              | Description                                                   |
 |----------------------|---------------------------------------------------------------|
-| `npm start`          | Start all services concurrently (frontend, backend, bot)      |
-| `npm run start:backend` | Start backend service                                        |
+| `npm start`          | Start all services concurrently (frontend, server, bot)      |
+| `npm run start:server` | Start server service                                        |
 | `npm run start:frontend`| Start frontend service                                       |
 | `npm run start:bot`     | Start bot-service                                            |
 | `npm run debug`         | Start all services in debug mode                            |
@@ -111,7 +111,7 @@ KAFKA_BROKER_URL=192.168.80.128:9092
 
 ### Option B – Run All Services with Docker Compose
 
-Run full system using Docker (Kafka, backend, frontend, bot-service, Mongo, etc):
+Run full system using Docker (Kafka, server-service, frontend, bot-service, Mongo, etc):
 
 ```bash
 docker compose -f infra/docker-compose.yml up --build
@@ -134,7 +134,7 @@ KeeperErrorCode = NodeExists
 Example contents for each service:  
 (Might not be updated! Check `.env.example` in each service folder.)
 
-### 📁 backend/.env.example
+### 📁 server-service/.env.example
 ```env
 JWT_SECRET=your_jwt_secret_here
 MONGO_URI=mongodb://localhost:27017/chess
@@ -175,7 +175,7 @@ The app uses a custom React Context (`AuthContext`) to manage user authenticatio
 | `token`     | JWT string stored in `localStorage` and React state                         |
 | `setToken`  | Function to update the token (login/logout)                                 |
 | `username`  | Decoded from the JWT payload (uses `atob` on the middle part of the token)  |
-| `serverUrl` | The backend base URL from `.env` (`REACT_APP_API_BASE_URL`)                 |
+| `serverUrl` | The server-service base URL from `.env` (`REACT_APP_API_BASE_URL`)                 |
 
 ---
 

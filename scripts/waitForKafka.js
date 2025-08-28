@@ -1,16 +1,16 @@
-const fs = require('fs');
-const path = require('path');
-const net = require('net');
-const dotenv = require('dotenv');
+const fs = require("fs");
+const path = require("path");
+const net = require("net");
+const dotenv = require("dotenv");
 
-const service = process.argv[2]; // e.g. "bot-service" or "backend"
+const service = process.argv[2];
 if (!service) {
   console.error("❌ Usage: node waitForKafka.js <service-dir>");
   process.exit(1);
 }
 
 // Load .env from the specific service folder
-const envPath = path.join(__dirname, '..', service, '.env');
+const envPath = path.join(__dirname, "..", service, ".env");
 if (!fs.existsSync(envPath)) {
   console.error(`❌ .env file not found for service '${service}'`);
   process.exit(1);
@@ -23,8 +23,8 @@ if (!brokers) {
   process.exit(1);
 }
 
-const brokerList = brokers.split(',').map(b => {
-  const [host, port] = b.trim().split(':');
+const brokerList = brokers.split(",").map((b) => {
+  const [host, port] = b.trim().split(":");
   return { host, port: parseInt(port) };
 });
 
@@ -45,13 +45,13 @@ function waitForBroker({ host, port }) {
     };
 
     socket.setTimeout(timeout);
-    socket.on('connect', () => {
+    socket.on("connect", () => {
       done = true;
       socket.end();
       resolve();
     });
-    socket.on('error', fail);
-    socket.on('timeout', fail);
+    socket.on("error", fail);
+    socket.on("timeout", fail);
   });
 }
 
@@ -67,8 +67,10 @@ function waitForBroker({ host, port }) {
         // try next
       }
     }
-    await new Promise(res => setTimeout(res, 2000));
+    await new Promise((res) => setTimeout(res, 2000));
   }
-  console.error(`❌ All Kafka brokers unreachable after ${maxRetries} attempts.`);
+  console.error(
+    `❌ All Kafka brokers unreachable after ${maxRetries} attempts.`
+  );
   process.exit(1);
 })();

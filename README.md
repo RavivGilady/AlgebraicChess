@@ -1,9 +1,10 @@
 # ♟️ Algebraic Chess
 
 ---
+
 ## ⚡ Highlights for Interviewers
 
- 🔹 Full microservices app deployed to AWS EC2  
+🔹 Full microservices app deployed to AWS EC2  
  🔹 Secured with Nginx + HTTPS via Certbot  
  🔹 Uses Kafka, Docker Compose, Elastic IP, and custom domain
 
@@ -24,6 +25,7 @@ This app is deployed to **AWS EC2** using **Docker Compose**, secured with **HTT
 ## 🌐 Tech Stack
 
 ### 🧩 Architecture
+
 - **Microservices** powered by **Docker Compose**
 - **Kafka** as a message broker for bot move processing
 - **Backend** API using **Node.js + Express**
@@ -32,30 +34,31 @@ This app is deployed to **AWS EC2** using **Docker Compose**, secured with **HTT
 
 ### 📦 Core Components
 
-| Component        | Description                                |
-|------------------|--------------------------------------------|
-| `backend/`       | Main server handling game logic & sockets  |
-| `bot-service/`   | Kafka consumer + Stockfish bot move engine |
-| `frontend/`      | React-based frontend                       |
-| `infra/`         | Docker Compose files (Kafka, backend, bot) |
+| Component         | Description                                                      |
+| ----------------- | ---------------------------------------------------------------- |
+| `server-service/` | Main server handling game logic & sockets & request coordination |
+| `bot-service/`    | Kafka consumer + Stockfish bot move engine                       |
+| `frontend/`       | React-based frontend                                             |
+| `infra/`          | Docker Compose files (Kafka, backend, bot)                       |
 
 ---
 
 ## 🔧 Infrastructure
 
-| Service            | Purpose                                   |
-|--------------------|-------------------------------------------|
-| **EC2 + Docker**   | Hosts backend & bot microservices         |
-| **Nginx + Certbot**| HTTPS reverse proxy with free SSL         |
-| **Kafka/Zookeeper**| Event-driven communication for moves      |
-| **Vercel**         | Frontend deployment                       |
-| **Namecheap DNS**  | Custom domain routing via Elastic IP      |
+| Service             | Purpose                              |
+| ------------------- | ------------------------------------ |
+| **EC2 + Docker**    | Hosts backend & bot microservices    |
+| **Nginx + Certbot** | HTTPS reverse proxy with free SSL    |
+| **Kafka/Zookeeper** | Event-driven communication for moves |
+| **Vercel**          | Frontend deployment                  |
+| **Namecheap DNS**   | Custom domain routing via Elastic IP |
 
 ---
 
 ## 🛡️ CORS Handling
 
 CORS is configured in the backend to allow only:
+
 - `http://localhost:3000` (local dev)
 - `https://algebric-chess.vercel.app` (production frontend)
 
@@ -75,22 +78,26 @@ docker compose up --build
 ### Alternative Dev Setup:
 
 1. **Install dependencies**
+
 ```bash
 npm install
 cd bot-service && npm install
 ```
 
 2. **Start Kafka**
+
 ```bash
 # Start Kafka/Zookeeper on your host machine
 ```
 
 3. **Start backend & frontend**
+
 ```bash
 npm start
 ```
 
 4. **Start bot service**
+
 ```bash
 cd bot-service && npm start
 ```
@@ -109,11 +116,13 @@ cd bot-service && npm start
 Each service has its own `Dockerfile`, managed via `infra/docker-compose.yml`.
 
 To rebuild:
+
 ```bash
 docker compose build
 ```
 
 To shut down:
+
 ```bash
 docker compose down
 ```
