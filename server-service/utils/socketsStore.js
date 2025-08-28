@@ -1,4 +1,4 @@
-const logger = require("../utils/logger");
+const logger = require("./logger");
 const { Server } = require("socket.io");
 const { registerAsPlayer } = require("../services/playersManager");
 const jwt = require("jsonwebtoken");
