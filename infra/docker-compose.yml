@@ -25,6 +25,17 @@ services:
       retries: 10
     depends_on:
       - zookeeper
+  mongodb:
+    image: mongo:latest # Use a specific version like mongo:7.0.5 for stability
+    container_name: mongodb
+    ports:
+      - "27017:27017" # Maps host port 27017 to container port 27017
+    volumes:
+      - mongodb_data:/data/db # Persistent storage for MongoDB data
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin # Root username for MongoDB
+      MONGO_INITDB_ROOT_PASSWORD: password # Root password for MongoDB
+    restart: unless-stopped # Restarts the container unless it's explicitly stopped
 
   server-service:
     container_name: server-service
@@ -47,3 +58,7 @@ services:
     depends_on:
       kafka:
         condition: service_healthy
+
+volumes:
+  mongodb_data:
+    driver: local # 
