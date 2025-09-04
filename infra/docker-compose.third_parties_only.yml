@@ -19,3 +19,18 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     depends_on:
       - zookeeper
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017" 
+    volumes:
+      - mongodb_data:/data/db 
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin 
+      MONGO_INITDB_ROOT_PASSWORD: password 
+    restart: unless-stopped 
+
+volumes:
+  mongodb_data:
+    driver: local 
