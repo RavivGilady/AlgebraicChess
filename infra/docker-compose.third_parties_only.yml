@@ -21,16 +21,15 @@ services:
       - zookeeper
   mongodb:
     image: mongo:latest
-    container_name: mongodb
     ports:
-      - "27017:27017" 
+      - "27017:27017"
     volumes:
-      - mongodb_data:/data/db 
+      - mongodb_data:/data/db
     environment:
-      MONGO_INITDB_ROOT_USERNAME: admin 
-      MONGO_INITDB_ROOT_PASSWORD: password 
-    restart: unless-stopped 
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+    restart: unless-stopped
 
 volumes:
   mongodb_data:
-    driver: local 
+    driver: local
