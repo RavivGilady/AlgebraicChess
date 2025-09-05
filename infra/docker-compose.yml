@@ -56,8 +56,6 @@ services:
     depends_on:
       kafka:
         condition: service_healthy
-      mongodb:
-        condition: service_healthy
 
 volumes:
   mongodb_data:
