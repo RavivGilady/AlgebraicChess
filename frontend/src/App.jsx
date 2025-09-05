@@ -6,7 +6,6 @@ import AppLayout from "./components/Layout/AppLayout";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
-import Loading from "./pages/Loading.jsx";
 function App() {
   return (
     <Router>
@@ -17,9 +16,9 @@ function App() {
           <Route path="/login" element={<Auth mode="login" />} />
           <Route path="/register" element={<Auth mode="register" />} />
           {/* Protected routes */}
-          {/* <Route element={<PrivateRoute />}> */}
+          <Route element={<PrivateRoute />}>
           <Route path="/game" element={<Game />} />
-          {/* </Route> */}
+          </Route>
           {/* Catch-all */}
           {/* <Route path="*" element={<NotFound />} /> */}
         </Routes>
