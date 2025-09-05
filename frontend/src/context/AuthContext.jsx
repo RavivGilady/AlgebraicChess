@@ -57,7 +57,7 @@ export function AuthProvider({ children }) {
         setIsLoading(false);
       }
     },
-    [setAndStoreToken]
+    [setAndStoreToken],
   );
 
   const register = useCallback(async (username, password) => {

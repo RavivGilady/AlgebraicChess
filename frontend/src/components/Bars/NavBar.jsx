@@ -35,7 +35,7 @@ const NavBar = () => {
               </button>
               <button
                 className="rounded-xl px-3 py-1.5 text-brand-dark transition hover:bg-brand-hover/60"
-                onClick={() => loginAsGuest() }
+                onClick={() => loginAsGuest()}
               >
                 Continue as Guest
               </button>

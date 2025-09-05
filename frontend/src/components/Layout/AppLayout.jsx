@@ -6,7 +6,7 @@ const AppLayout = ({ children }) => {
   const { isAuthenticated, logout } = useAuth();
 
   return (
-    <div className=" w-full flex flex-col min-h-screen">
+    <div className="flex min-h-screen w-full flex-col">
       <NavBar />
       {children}
     </div>

@@ -19,7 +19,6 @@ export const GameProvider = ({ gameId, children }) => {
   const [socket, setSocket] = useState(null);
   const [nextMoveId, setNextMoveId] = useState(null);
 
-
   useEffect(() => {
     const newSocket = io(serverUrl, {
       auth: {
@@ -74,7 +73,7 @@ export const GameProvider = ({ gameId, children }) => {
   };
   useEffect(
     () => console.log(`moves list: ${JSON.stringify(gameState.moves)}`),
-    [gameState.moves]
+    [gameState.moves],
   );
 
   return (

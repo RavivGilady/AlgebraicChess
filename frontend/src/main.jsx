@@ -11,5 +11,5 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       {import.meta.env.PROD && <Analytics />}
       <App />
     </AuthProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

@@ -36,9 +36,9 @@ function Auth({ mode }) {
       : "rounded-2xl bg-brand-dark px-4 py-2 text-white font-semibold shadow hover:bg-brand-hover transition focus:outline-none focus:ring-2 focus:ring-brand-dark focus:ring-offset-2";
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-brand-light px-4">
-      <div className="w-full max-w-md rounded-2xl bg-white border shadow p-6">
-        <h2 className="text-2xl font-semibold text-brand-dark mb-4">
+    <div className="flex min-h-screen items-center justify-center bg-brand-light px-4">
+      <div className="w-full max-w-md rounded-2xl border bg-white p-6 shadow">
+        <h2 className="mb-4 text-2xl font-semibold text-brand-dark">
           {mode === "login" ? "Login" : "Register"}
         </h2>
         <div className="space-y-4">
@@ -64,8 +64,8 @@ function Auth({ mode }) {
             {isLoading
               ? "Please wait..."
               : mode === "login"
-              ? "Login"
-              : "Register"}
+                ? "Login"
+                : "Register"}
           </button>
           {message && <p className="text-sm text-red-600">{message}</p>}
         </div>
