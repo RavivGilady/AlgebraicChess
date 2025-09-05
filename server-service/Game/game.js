@@ -1,153 +1,150 @@
 const { Chess } = require('chess.js')
-const { v4: uuidv4 } = require('uuid');
+const { v4: uuidv4 } = require('uuid')
 const logger = require('../utils/logger')
 
-
 class Game {
+  constructor() {
+    this.chess = new Chess()
+    this.whitePlayer = null
+    this.blackPlayer = null
+    this.currentPlayer = null
+    this.currentMoveId = uuidv4()
+    this.gameId = uuidv4()
+    this.winner = null
+    this.gameOver = false
+  }
+  addPlayer(player) {
+    if (this.whitePlayer == null && this.blackPlayer == null) {
+      Math.random() > 0.5
+        ? (this.whitePlayer = player)
+        : (this.blackPlayer = player)
+    } else if (this.whitePlayer == null) {
+      this.whitePlayer = player
+    } else if (this.blackPlayer == null) {
+      this.blackPlayer = player
+    } else {
+      logger.error(`Game ${this.gameId} already has two players!`)
+      return
+    }
+    logger.info(
+      `Player ${JSON.stringify(player.getPlayerDetails())} added to game ${this.gameId} as ${this.whitePlayer == player ? 'white' : 'black'}`
+    )
+  }
+  areAllPlayersSet() {
+    return this.whitePlayer != null && this.blackPlayer != null
+  }
+  startGame() {
+    this.whitePlayer.setOnMoveCallback((data) =>
+      this.makeMove(this.whitePlayer, { move: data.move, moveId: data.moveId })
+    )
+    this.whitePlayer.setColor('white')
+    this.blackPlayer.setOnMoveCallback((data) =>
+      this.makeMove(this.blackPlayer, { move: data.move, moveId: data.moveId })
+    )
+    this.blackPlayer.setColor('black')
+    this.currentPlayer = this.whitePlayer
+    this.currentPlayer.requestMove(this.currentMoveId)
+  }
+  printBoard() {
+    console.log(this.chess.ascii())
+  }
 
-    constructor() {
-        this.chess = new Chess();
-        this.whitePlayer = null;
-        this.blackPlayer = null;
-        this.currentPlayer = null;
-        this.currentMoveId = uuidv4();
-        this.gameId = uuidv4();
-        this.winner = null;
-        this.gameOver = false;
+  printAvailableMoves() {
+    console.log(this.chess.moves())
+  }
+  isMoveLeagal(move) {
+    console.log(`moves available: ${this.chess.moves()}`)
+    return this.chess.moves().includes(move)
+  }
+  isGameOver() {
+    return this.chess.isGameOver()
+  }
+  isCheckmate() {
+    return this.chess.isCheckmate()
+  }
+  getGameOverReason() {
+    if (!this.isGameOver()) {
+      throw new Error('Game not over yet!')
     }
-    addPlayer(player) {
-        if (this.whitePlayer == null && this.blackPlayer == null) {
-            Math.random() > 0.5 ? this.whitePlayer = player : this.blackPlayer = player;
-        }
-        else if (this.whitePlayer == null) {
-            this.whitePlayer = player;
-        }
-        else if (this.blackPlayer == null) {
-            this.blackPlayer = player;
-        }
-        else {
-            logger.error(`Game ${this.gameId} already has two players!`)
-            return;
-        }
-        logger.info(`Player ${JSON.stringify(player.getPlayerDetails())} added to game ${this.gameId} as ${this.whitePlayer == player ? 'white' : 'black'}`)
+    if (this.chess.isThreefoldRepetition()) return 'threeFold'
+    if (this.chess.isDraw()) return 'draw'
+    if (this.chess.isInsufficientMaterial()) return 'insufficientMaterial'
+    if (this.chess.isStalemate()) return 'stalemate'
+    if (this.chess.isCheckmate()) {
+      return 'checkmate'
+    }
+  }
 
-    }
-    areAllPlayersSet() {
-        return this.whitePlayer != null && this.blackPlayer != null;
-    }
-    startGame() {
-        this.whitePlayer.setOnMoveCallback(data => this.makeMove(this.whitePlayer, { "move": data.move, "moveId": data.moveId }));
-        this.whitePlayer.setColor('white');
-        this.blackPlayer.setOnMoveCallback(data => this.makeMove(this.blackPlayer, { "move": data.move, "moveId": data.moveId }));
-        this.blackPlayer.setColor('black');
-        this.currentPlayer = this.whitePlayer;
-        this.currentPlayer.requestMove(this.currentMoveId);
-    }
-    printBoard() {
-        console.log(this.chess.ascii())
-    }
+  isCheckmate() {
+    return this.chess.isCheckmate()
+  }
 
-    printAvailableMoves() {
-        console.log(this.chess.moves())
-    }
-    isMoveLeagal(move) {
-        console.log(`moves available: ${this.chess.moves()}`)
-        return this.chess.moves().includes(move)
-    }
-    isGameOver() {
-        return this.chess.isGameOver();
-    }
-    isCheckmate() {
-        return this.chess.isCheckmate();
+  notifyGameResult() {
+    this.whitePlayer.gameOver(this.getGameOverReason(), this.winner)
+    this.blackPlayer.gameOver(this.getGameOverReason(), this.winner)
+  }
 
-    }
-    getGameOverReason() {
-        if (!this.isGameOver()) {
-            throw new Error("Game not over yet!");
-        }
-        if (this.chess.isThreefoldRepetition())
-            return "threeFold"
-        if (this.chess.isDraw())
-            return "draw"
-        if (this.chess.isInsufficientMaterial())
-            return "insufficientMaterial"
-        if (this.chess.isStalemate())
-            return "stalemate"
-        if (this.chess.isCheckmate()) {
-            return "checkmate"
-        }
-    }
+  swapTurn() {
+    this.currentPlayer =
+      this.currentPlayer == this.whitePlayer
+        ? this.blackPlayer
+        : this.whitePlayer
+  }
+  makeMove(player, moveDetails) {
+    console.log(JSON.stringify(moveDetails))
+    let move = null
+    if (
+      player === this.currentPlayer &&
+      this.currentMoveId === moveDetails.moveId
+    ) {
+      try {
+        move = this.performMove(moveDetails.move)
+      } catch (error) {
+        this.getNewMove(moveDetails.move)
+        return
+      }
 
-    isCheckmate() {
-        return this.chess.isCheckmate();
-    }
-
-    notifyGameResult() {
-        this.whitePlayer.gameOver(this.getGameOverReason(), this.winner)
-        this.blackPlayer.gameOver(this.getGameOverReason(), this.winner)
-    }
-
-    swapTurn() {
-        this.currentPlayer = this.currentPlayer == this.whitePlayer ? this.blackPlayer : this.whitePlayer;
-    }
-    makeMove(player, moveDetails) {
-        console.log(JSON.stringify(moveDetails))
-        let move = null;
-        if (player === this.currentPlayer && this.currentMoveId === moveDetails.moveId) {
-            try {
-
-                move = this.performMove(moveDetails.move);
-
-            }
-            catch (error) {
-                this.getNewMove(moveDetails.move)
-                return;
-            }
-
-            this.notifyMove(move)
-            if (this.isGameOver()) {
-                this.endGame();
-            }
-            else {
-                this.swapTurn()
-                this.requestMove()
-            }
-
-        }
-
-    }
-    notifyMove(move) {
-        let playerColor = this.currentPlayer == this.whitePlayer ? "white" : "black";
-        this.whitePlayer.notifyMove({ "color": playerColor, "move": move })
-        this.blackPlayer.notifyMove({ "color": playerColor, "move": move })
-    }
-    endGame() {
-        this.gameOver = true;
-        this.winner = this.isCheckmate() ? this.currentPlayer : null;
-        this.notifyGameResult();
-    }
-    getNewMove(move) {
-        console.log(`move ${move} is bad , requesting new`)
-        this.currentPlayer.notifyBadMove(move);
+      this.notifyMove(move)
+      if (this.isGameOver()) {
+        this.endGame()
+      } else {
+        this.swapTurn()
         this.requestMove()
+      }
     }
-    requestMove() {
-        this.currentMoveId = uuidv4();
-        this.currentPlayer.requestMove(this.currentMoveId)
-    }
+  }
+  notifyMove(move) {
+    let playerColor = this.currentPlayer == this.whitePlayer ? 'white' : 'black'
+    this.whitePlayer.notifyMove({ color: playerColor, move: move })
+    this.blackPlayer.notifyMove({ color: playerColor, move: move })
+  }
+  endGame() {
+    this.gameOver = true
+    this.winner = this.isCheckmate() ? this.currentPlayer : null
+    this.notifyGameResult()
+  }
+  getNewMove(move) {
+    console.log(`move ${move} is bad , requesting new`)
+    this.currentPlayer.notifyBadMove(move)
+    this.requestMove()
+  }
+  requestMove() {
+    this.currentMoveId = uuidv4()
+    this.currentPlayer.requestMove(this.currentMoveId)
+  }
 
-    isUciMove(move) {
-        return /^[a-h][1-8][a-h][1-8].?/.test(move);
-    }
-    performMove(move) {
-        return this.isUciMove(move) ? this.chess.move({
-            from: move.slice(0, 2),
-            to: move.slice(2, 4),
-            ...(move.length > 4 ? { promotion: move[4] } : {})  // Check length before accessing move[4]
+  isUciMove(move) {
+    return /^[a-h][1-8][a-h][1-8].?/.test(move)
+  }
+  performMove(move) {
+    return this.isUciMove(move)
+      ? this.chess.move({
+          from: move.slice(0, 2),
+          to: move.slice(2, 4),
+          ...(move.length > 4 ? { promotion: move[4] } : {}), // Check length before accessing move[4]
         }).san
-            : this.chess.move(move).san
-    }
+      : this.chess.move(move).san
+  }
 }
 
-
-module.exports = Game;
+module.exports = Game
