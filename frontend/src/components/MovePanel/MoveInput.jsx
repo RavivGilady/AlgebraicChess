@@ -1,12 +1,11 @@
 // /src/components/MoveInput.jsx
-import React, { useState, useEffect, useRef } from 'react';
-import { useGame } from '../../context/GameContext'
+import React, { useState, useEffect, useRef } from "react";
+import { useGame } from "../../context/GameContext";
 
 const MoveInput = () => {
-  const { sendMoveToServer } = useGame()
+  const { sendMoveToServer } = useGame();
   const [move, setMove] = useState("");
   const inputRef = useRef(null);
-
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -15,7 +14,7 @@ const MoveInput = () => {
   const handleChange = (e) => {
     const value = e.target.value;
     // Allow only a-z, A-Z, 0-9, =, +, #
-  const filtered = value.replace(/[^a-zA-Z0-9-=+#]/g, "");
+    const filtered = value.replace(/[^a-zA-Z0-9-=+#]/g, "");
     setMove(filtered);
   };
 
@@ -26,8 +25,6 @@ const MoveInput = () => {
     }
   };
 
-
-
   return (
     <input
       ref={inputRef}
@@ -35,7 +32,7 @@ const MoveInput = () => {
       value={move}
       onChange={handleChange}
       onKeyDown={handleKeyDown}
-      className="w-full text-[72pt] text-[#543A14] bg-transparent border-none outline-none text-center placeholder-[#543A14]/40"
+      className="w-full border-none bg-transparent text-center text-[72pt] text-inputText placeholder-inputText/40 outline-none"
       spellCheck={false}
       autoComplete="off"
       autoCapitalize="off"
@@ -45,7 +42,3 @@ const MoveInput = () => {
 };
 
 export default MoveInput;
-
-
-
-

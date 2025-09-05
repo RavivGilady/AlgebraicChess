@@ -20,7 +20,7 @@ app.use(express.json());
 app.use(loggingMiddleware.logHttpRequests);
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://algebric-chess.vercel.app"], // include both dev & prod
+    origin: ["http://localhost:5174", "https://algebric-chess.vercel.app"], // include both dev & prod
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
@@ -35,12 +35,12 @@ server.listen(PORT, "0.0.0.0", () => {
   logger.info(`listening on *:${PORT}`);
 });
 
-// connectDb()
-//     .then(() => logger.info('Database connected successfully'))
-//     .catch(err => {
-//         logger.error(`Database connection failed:, ${err}`);
-//         process.exit(1);
-//     });
+connectDb()
+  .then(() => logger.info("Database connected successfully"))
+  .catch((err) => {
+    logger.error(`Database connection failed:, ${err}`);
+    process.exit(1);
+  });
 
 startBotMovesConsumer()
   .then(() => logger.info("BotPlayManager is ready"))

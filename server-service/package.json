@@ -7,7 +7,12 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon server.js",
     "debug": "nodemon --inspect=9230 server.js"
-    },
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "logs/*.log"
+    ]
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

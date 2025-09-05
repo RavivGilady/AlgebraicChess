@@ -73,17 +73,11 @@ async function runStockfish(elo,fen) {
         await sendCommand(engine, `setoption name UCI_Elo value ${elo}`,false);
         console.log(`UCI_Elo set to ${elo}`);
         // Set up a position (no response expected)
-        // console.log('Setting position...');
         await sendCommand(engine, `position fen ${fen}`, false);
-        // console.log('Position set');
 
         // Request a move (response expected)
-        // console.log('Requesting move...');
         const bestMove = await sendCommand(engine, 'go movetime 1000');
-        // console.log('Best move:', bestMove);
-        
-        // Quit Stockfish
-        // console.log('Quitting Stockfish...');
+
         await sendCommand(engine, 'quit', false);
         return bestMove;
     } catch (err) {

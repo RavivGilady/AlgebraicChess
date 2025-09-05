@@ -50,7 +50,6 @@ class BotPlayer extends Player {
         this.board.move(move.move)
     }
     notifyBadMove(move) {
-        //enter retry logic here
         logger.error("BotPlayer received bad move from engine:", move);
         throw new Error("Engine gave bad move somehow");
     }
@@ -61,5 +60,3 @@ class BotPlayer extends Player {
 
 
 module.exports = BotPlayer;
-    
-

@@ -75,6 +75,13 @@ cd infra
 docker compose up --build
 ```
 
+### Environment variables
+
+- Backend (`server-service`) reads `MONGO_URI` for the MongoDB connection string.
+  - Local dev example: `mongodb://127.0.0.1:27017/chess_app`
+  - Docker Compose example: `mongodb://mongo:27017/chess_app`
+- Create `server-service/.env` from `server-service/.env.example` and set `MONGO_URI` accordingly.
+
 ### Alternative Dev Setup:
 
 1. **Install dependencies**

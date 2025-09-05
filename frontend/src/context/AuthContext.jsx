@@ -40,6 +40,42 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
+  const login = useCallback(
+    async (username, password) => {
+      setIsLoading(true);
+      try {
+        const r = await api.post("/auth/login", { username, password });
+        const t = r?.data?.token;
+        if (t) setAndStoreToken(t);
+        return { ok: true, token: t };
+      } catch (e) {
+        return {
+          ok: false,
+          error: e?.response?.data?.message || e?.message || "Login failed",
+        };
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [setAndStoreToken]
+  );
+
+  const register = useCallback(async (username, password) => {
+    setIsLoading(true);
+    try {
+      await api.post("/auth/register", { username, password });
+      return { ok: true };
+    } catch (e) {
+      return {
+        ok: false,
+        error:
+          e?.response?.data?.message || e?.message || "Registration failed",
+      };
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   const loginAsGuest = useCallback(async () => {
     setIsLoading(true);
     const r = await api.get("/auth/loginAsGuest");
@@ -84,6 +120,9 @@ export function AuthProvider({ children }) {
       value={{
         isAuthenticated,
         isLoading,
+        user,
+        login,
+        register,
         loginAsGuest,
         logout,
         serverUrl,

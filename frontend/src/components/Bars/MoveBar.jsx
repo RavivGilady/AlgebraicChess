@@ -3,7 +3,7 @@ import { useGame } from "../../context/GameContext";
 import { Card } from "../ui/card";
 import { ScrollArea } from "../ui/scroll-area";
 
-const TopBar = () => {
+const MoveBar = () => {
   const [hovered, setHovered] = useState(false);
   const [recentlyUpdated, setRecentlyUpdated] = useState(false);
   const { gameState } = useGame();
@@ -38,17 +38,17 @@ const TopBar = () => {
   const bgOpacity = hovered
     ? "bg-accent/100"
     : recentlyUpdated
-    ? "bg-accent/80"
-    : "bg-accent/30";
+      ? "bg-accent/80"
+      : "bg-accent/30";
 
   return (
     <Card
-  className={`fixed top-0 w-full z-10 transition-all duration-300 px-4 py-2 min-h-[40px] ${bgOpacity}`}
+      className={`fixed top-[40px] z-10 min-h-[40px] w-full px-4 py-2 transition-all duration-300 ${bgOpacity}`}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
       <ScrollArea className="w-full">
-        <div className="flex gap-4 text-inputText font-bold whitespace-nowrap">
+        <div className="flex gap-4 whitespace-nowrap font-bold text-inputText">
           {formattedMoves.map((line, index) => (
             <span key={index}>{line}</span>
           ))}
@@ -58,4 +58,4 @@ const TopBar = () => {
   );
 };
 
-export default TopBar;
+export default MoveBar;

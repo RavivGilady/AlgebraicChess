@@ -23,7 +23,7 @@ body {
 
 .last-move {
   font-size: 16px;
-  color: #131010;
+  @apply text-gray-900;
   word-wrap: break-word; /* Prevents overflow if the move text is too long */
 }
 
@@ -36,6 +36,12 @@ body {
 }
 
 @keyframes blink {
-  0%, 49% { opacity: 1; }
-  50%, 100% { opacity: 0; }
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
 }

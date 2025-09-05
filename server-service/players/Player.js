@@ -3,7 +3,6 @@ class Player {
     throw new Error("setOnMoveCallback must be implemented by subclasses");
   }
   setColor(){
-    
   }
   requestMove(nextMoveId) {
   }
@@ -11,7 +10,6 @@ class Player {
   }
   notifyMove(move) {
     throw new Error("notifyMove must be implemented by subclasses");
-
   }
   notifyBadMove(move) {
     throw new Error("notifyBadMove must be implemented by subclasses");
@@ -19,6 +17,5 @@ class Player {
   getPlayerDetails(){
     throw new Error("getPlayerDetails must be implemented by subclasses");
   }
-  
 }
 module.exports = Player;

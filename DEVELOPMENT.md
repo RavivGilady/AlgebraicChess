@@ -21,6 +21,18 @@ This will:
 
 > Make sure each directory has a `.env.example` committed.
 
+For `server-service`, the `.env.example` includes a `MONGO_URI` entry:
+
+```env
+PORT=5000
+JWT_SECRET=your_jwt_secret_here
+KAFKA_BROKER_URL=localhost:9092
+# Local Mongo
+MONGO_URI=mongodb://127.0.0.1:27017/chess_app
+# Docker Compose Mongo service
+# MONGO_URI=mongodb://mongo:27017/chess_app
+```
+
 ---
 
 ### 2. Install Dependencies
@@ -116,6 +128,8 @@ Run full system using Docker (Kafka, server-service, frontend, bot-service, Mong
 ```bash
 docker compose -f infra/docker-compose.yml up --build
 ```
+
+Ensure `server-service` has `MONGO_URI` set to `mongodb://mongo:27017/chess_app` when using the bundled Mongo container.
 
 🛑 If you run into issues, shut everything down cleanly:
 ```bash
