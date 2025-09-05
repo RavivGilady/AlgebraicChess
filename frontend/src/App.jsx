@@ -3,9 +3,10 @@ import Auth from "./components/Auth/Auth";
 import Home from "./components/Home/Home";
 import Game from "./components/Game/Game";
 import AppLayout from "./components/Layout/AppLayout";
-import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
+import PrivateRoute from "./components/Routes/PrivateRoute";
 import { Navigate, useLocation } from "react-router-dom";
-import { useAuth } from "./context/AuthContext";
+import UnauthenticatedRoute from "./components/Routes/UnauthenticatedRoute";
+
 function App() {
   return (
     <Router>
@@ -13,11 +14,14 @@ function App() {
         <Routes>
           {/* Public routes */}
           <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Auth mode="login" />} />
-          <Route path="/register" element={<Auth mode="register" />} />
+          {/* unauthenticated routes */}
+          <Route element={<UnauthenticatedRoute />}>
+            <Route path="/login" element={<Auth mode="login" />} />
+            <Route path="/register" element={<Auth mode="register" />} />
+          </Route>
           {/* Protected routes */}
           <Route element={<PrivateRoute />}>
-          <Route path="/game" element={<Game />} />
+            <Route path="/game" element={<Game />} />
           </Route>
           {/* Catch-all */}
           {/* <Route path="*" element={<NotFound />} /> */}

@@ -6,8 +6,8 @@ function Home() {
   const { isAuthenticated } = useAuth();
 
   return (
-    <div className="min-h-screen bg flex flex-col items-center justify-center px-4">
-      <h1 className="text-3xl sm:text-4xl font-bold text-brand-dark">
+    <div className="bg flex min-h-screen flex-col items-center justify-center px-4">
+      <h1 className="text-3xl font-bold text-brand-dark sm:text-4xl">
         Welcome to AlgebraicChess
       </h1>
       {!isAuthenticated ? (

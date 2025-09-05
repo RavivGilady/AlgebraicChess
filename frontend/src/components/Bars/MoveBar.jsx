@@ -42,7 +42,7 @@ const MoveBar = () => {
       : "bg-accent/30";
 
   return (
-    <Card
+    <div
       className={`fixed top-[40px] z-10 min-h-[40px] w-full px-4 py-2 transition-all duration-300 ${bgOpacity}`}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -54,7 +54,7 @@ const MoveBar = () => {
           ))}
         </div>
       </ScrollArea>
-    </Card>
+    </div>
   );
 };
 

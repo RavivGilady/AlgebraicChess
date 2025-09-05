@@ -20,7 +20,7 @@ const BottomBar = ({ handleStartGame, openDialog }) => {
         </button>
         <button
           onClick={handleStartGame}
-          className="rounded-xl px-4 py-2 text-white shadow transition hover:bg-brand-hover"
+          className="rounded-xl bg-brand-dark px-4 py-2 text-white shadow transition hover:bg-brand-hover"
         >
           Restart Game
         </button>
