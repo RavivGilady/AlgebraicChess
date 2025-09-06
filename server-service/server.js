@@ -37,6 +37,7 @@ server.listen(PORT, '0.0.0.0', () => {
 
 connectDb()
   .then(() => logger.info('Database connected successfully'))
+  
   .catch((err) => {
     logger.error(`Database connection failed:, ${err}`)
     process.exit(1)
