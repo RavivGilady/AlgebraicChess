@@ -57,7 +57,7 @@ const NavBar = () => {
                   navigate("/");
                 }}
               >
-                Logout
+                Log Out
               </button>
             </>
           )}
