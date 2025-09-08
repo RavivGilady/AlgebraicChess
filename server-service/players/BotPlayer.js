@@ -40,7 +40,9 @@ class BotPlayer extends Player {
       logger.error('Failed to send move request:', err)
     })
   }
-
+  getIsDisconnected() {
+    return true
+  }
   handleMoveFromBroker(move) {
     this.onMove({ move: move, moveId: this.nextMoveId })
   }

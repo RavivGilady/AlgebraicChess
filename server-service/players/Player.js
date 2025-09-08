@@ -14,5 +14,9 @@ class Player {
   getPlayerDetails() {
     throw new Error('getPlayerDetails must be implemented by subclasses')
   }
+  getIsDisconnected() {
+    throw new Error('isDisconnected must be implemented by subclasses')
+  }
+  setDisconnectCallback(callback) {}
 }
 module.exports = Player

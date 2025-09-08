@@ -8,6 +8,7 @@ class HumanPlayer extends Player {
     this.socket = socket
     this.onMove = null
     this.playerDetails = playerDetails
+    this.isDisconnected = false
   }
   sendMessage(...args) {
     if (this.socket) {
@@ -30,7 +31,15 @@ class HumanPlayer extends Player {
   setOnMoveCallback(callback) {
     this.onMove = callback
   }
-
+  setDisconnectCallback(disconnectionCallback) {
+    this.socket.on('disconnect', () => {
+      this.isDisconnected = true
+      disconnectionCallback()
+    })
+  }
+  getIsDisconnected() {
+    return this.isDisconnected
+  }
   requestMove(moveId) {
     if (this.onMove == null) {
       throw new Error("player doesn't have a callback!")
@@ -45,8 +54,9 @@ class HumanPlayer extends Player {
   getPlayerDetails() {
     return {
       type: 'human',
+      userId: this.playerDetails.userId,
+      username: this.playerDetails.username,
       elo: this.playerDetails.elo,
-      name: this.playerDetails.username,
     }
   }
 }

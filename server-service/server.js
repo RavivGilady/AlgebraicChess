@@ -1,5 +1,4 @@
 require('dotenv').config()
-const Game = require('./Game/game')
 const express = require('express')
 const app = express()
 const http = require('http')
@@ -20,7 +19,11 @@ app.use(express.json())
 app.use(loggingMiddleware.logHttpRequests)
 app.use(
   cors({
-    origin: ['http://localhost:5174', 'https://algebric-chess.vercel.app'], // include both dev & prod
+    origin: [
+      'http://localhost:5174',
+      'http://localhost:5173',
+      'https://algebric-chess.vercel.app',
+    ], 
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,

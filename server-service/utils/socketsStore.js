@@ -11,7 +11,6 @@ const io = new Server({
   },
 })
 
-// Middleware for authentication
 io.use((socket, next) => {
   const token = socket.handshake.auth.token
   const gameId = socket.handshake.auth.gameId
@@ -37,9 +36,14 @@ io.use((socket, next) => {
   })
 })
 
-// Setup connection handlers
 io.on('connection', (socket) => {
-  registerAsPlayer(socket.user.username, socket.user.elo, socket, socket.gameId)
+  registerAsPlayer(
+    socket.user.username,
+    socket.user.id,
+    socket.user.elo,
+    socket,
+    socket.gameId
+  )
 
   socket.on('disconnect', () => {
     logger.info('User disconnected:', socket.user.username)

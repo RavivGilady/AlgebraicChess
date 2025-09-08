@@ -1,16 +1,17 @@
+const EventEmitter = require('events')
 const { Chess } = require('chess.js')
 const { v4: uuidv4 } = require('uuid')
 const logger = require('../utils/logger')
-
-class Game {
+class Game extends EventEmitter {
   constructor() {
+    super()
     this.chess = new Chess()
     this.whitePlayer = null
     this.blackPlayer = null
     this.currentPlayer = null
     this.currentMoveId = uuidv4()
     this.gameId = uuidv4()
-    this.winner = null
+    this.winner = undefined
     this.gameOver = false
   }
   addPlayer(player) {
@@ -37,10 +38,12 @@ class Game {
     this.whitePlayer.setOnMoveCallback((data) =>
       this.makeMove(this.whitePlayer, { move: data.move, moveId: data.moveId })
     )
+    this.whitePlayer.setDisconnectCallback(() => this.disconnectPlayer())
     this.whitePlayer.setColor('white')
     this.blackPlayer.setOnMoveCallback((data) =>
       this.makeMove(this.blackPlayer, { move: data.move, moveId: data.moveId })
     )
+    this.blackPlayer.setDisconnectCallback(() => this.disconnectPlayer())
     this.blackPlayer.setColor('black')
     this.currentPlayer = this.whitePlayer
     this.currentPlayer.requestMove(this.currentMoveId)
@@ -144,6 +147,57 @@ class Game {
           ...(move.length > 4 ? { promotion: move[4] } : {}), // Check length before accessing move[4]
         }).san
       : this.chess.move(move).san
+  }
+  disconnectPlayer() {
+    if (this.areBothPlayersDisconnected()) {
+      this.emit('allPlayersDisconnected')
+    }
+  }
+  areBothPlayersDisconnected() {
+    return (
+      this.whitePlayer.getIsDisconnected() &&
+      this.blackPlayer.getIsDisconnected()
+    )
+  }
+  getGameDetailsForPersistence() {
+    const whitePlayerDetails = this.whitePlayer.getPlayerDetails()
+    const blackPlayerDetails = this.blackPlayer.getPlayerDetails()
+    logger.info(`whitePlayerDetails: ${JSON.stringify(whitePlayerDetails)}`)
+    logger.info(`blackPlayerDetails: ${JSON.stringify(blackPlayerDetails)}`)
+    const game = {
+      _id: this.gameId,
+      white: {
+        type: whitePlayerDetails.type,
+        userId:
+          whitePlayerDetails.type == 'human'
+            ? whitePlayerDetails.userId
+            : undefined,
+        elo: whitePlayerDetails.elo,
+      },
+      black: {
+        type: blackPlayerDetails.type,
+        userId:
+          blackPlayerDetails.type == 'human'
+            ? blackPlayerDetails.userId
+            : undefined,
+        elo: blackPlayerDetails.elo,
+      },
+      winner: this.winner
+        ? this.winner === this.whitePlayer
+          ? 'white'
+          : 'black'
+        : null,
+      status: this.gameOver ? 'gameOver' : 'active', // need to expand
+      lastActivityAt: new Date(),
+      version: 0,
+      expiresAt: this.gameOver ? null : new Date(Date.now() + 86400000),
+      snapshot: {
+        moves: this.chess.history(),
+        fen: this.chess.fen(),
+        turn: this.chess.turn(),
+      },
+    }
+    return game
   }
 }
 

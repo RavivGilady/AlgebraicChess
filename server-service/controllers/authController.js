@@ -21,7 +21,7 @@ const registerUser = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10)
 
     // Create and save the new user
-    const newUser = new User({ username, password: hashedPassword })
+    const newUser = new User({ username, password: hashedPassword, elo: 1200 })
     await newUser.save()
 
     res.status(201).json({ message: 'User registered successfully' })
@@ -49,7 +49,7 @@ const loginUser = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { id: user._id, username: user.username },
+      { id: user._id, username: user.username, elo: user.elo },
       JWT_SECRET,
       {
         expiresIn: '1h',
@@ -77,7 +77,6 @@ function generateGuestUsername() {
   const digits = '0123456789'.split('')
   let result = ''
 
-  // Shuffle digits and take the first 9
   for (let i = 0; i < 9; i++) {
     const randIndex = Math.floor(Math.random() * digits.length)
     result += digits[randIndex]
