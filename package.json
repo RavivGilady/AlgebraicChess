@@ -16,8 +16,8 @@
     "install:server": "cd server-service && npm install",
     "install:bot": "cd bot-service && npm install",
     "preinstall": "npm run install:server && npm run install:frontend && npm run install:bot",
-    "thirdParties:up": "docker compose -f infra/docker-compose.third_parties_only.yml up -d",
-    "thirdParties-down": "docker compose -f infra/docker-compose.third_parties_only.yml down --remove-orphans"
+    "dev": "docker compose -f infra/docker-compose.third_parties_only.yml up -d",
+    "dev-down": "docker compose -f infra/docker-compose.third_parties_only.yml down --remove-orphans"
   },
   "dependencies": {
     "dotenv": "^17.2.1",
