@@ -19,13 +19,13 @@ const Game = () => {
     return () => clearTimeout(timer); // Reset timer on repeated opens
   }, [isDialogOpen]);
 
-  const handleStartGame = async () => {
-    const response = await api.get("/game/startGameBot", {
-      params: { elo: 2000 },
-    });
-    setGameId(response.data.gameId);
-    setOpponentElo(response.data.elo);
-  };
+    const handleStartGame = async () => {
+      const response = await api.get("/game/startGameBot", {
+        params: { elo: 2000 },
+      });
+      setGameId(response.data.gameId);
+      setOpponentElo(response.data.elo);
+    };
 
   return (
     <div className="min-h-screen w-full">

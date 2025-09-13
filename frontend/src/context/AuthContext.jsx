@@ -27,8 +27,14 @@ function isExpired(t, skew = 15) {
 export function AuthProvider({ children }) {
   const [token, setToken] = useState(() => localStorage.getItem("jwtToken"));
   const claims = useMemo(() => (token ? decodeJwt(token) : null), [token]);
-  const user = claims ? { username: claims.username } : null;
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const user = claims
+    ? {
+        username: claims.username,
+        id: claims.id,
+        elo: claims.elo,
+      }
+    : null;
+  const isAuthenticated = useMemo(() => !!token && !isExpired(token), [token]);
   const [isLoading, setIsLoading] = useState(false);
   const setAndStoreToken = useCallback((t) => {
     if (t) {
@@ -95,21 +101,17 @@ export function AuthProvider({ children }) {
       const expiresAt = payload?.exp ? payload.exp * 1000 : 0;
 
       if (expiresAt > Date.now()) {
-        setIsAuthenticated(true);
         setIsLoading(false);
 
         // schedule auto-logout
         timeoutId = setTimeout(() => {
           console.log("Token expired, logging out");
-          setIsAuthenticated(false);
           localStorage.removeItem("jwtToken");
           setToken(null);
         }, expiresAt - Date.now());
       } else {
-        setIsAuthenticated(false);
       }
     } else {
-      setIsAuthenticated(false);
     }
 
     return () => clearTimeout(timeoutId);

@@ -24,6 +24,7 @@ class BotPlayer extends Player {
     this.board = new Chess()
     this.onMove = null
     this.nextMoveId = null
+    this.waitingForMove = false
   }
 
   setOnMoveCallback(callback) {
@@ -31,6 +32,7 @@ class BotPlayer extends Player {
   }
   requestMove(nextMoveId) {
     this.nextMoveId = nextMoveId
+    this.waitingForMove = true
     assignMoveIdToBotPlayer(nextMoveId, this)
     sendMoveRequest({
       moveId: nextMoveId,
@@ -41,10 +43,11 @@ class BotPlayer extends Player {
     })
   }
   getIsDisconnected() {
-    return true
+    return !this.waitingForMove
   }
   handleMoveFromBroker(move) {
     this.onMove({ move: move, moveId: this.nextMoveId })
+    this.waitingForMove = false
   }
   notifyMove(move) {
     this.board.move(move.move)

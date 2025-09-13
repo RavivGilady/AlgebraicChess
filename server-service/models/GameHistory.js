@@ -15,6 +15,7 @@ const PlayerSchema = new mongoose.Schema(
       required: true,
       min: 0,
     },
+    username: { type: String, required: true },
   },
   { _id: false, minimize: true }
 )
@@ -60,4 +61,6 @@ const gameHistorySchema = new mongoose.Schema({
 
 gameHistorySchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 })
 
+gameHistorySchema.index({ 'white.userId': 1, status: 1, lastActivityAt: -1 })
+gameHistorySchema.index({ 'black.userId': 1, status: 1, lastActivityAt: -1 })
 module.exports = mongoose.model('GameHistory', gameHistorySchema)

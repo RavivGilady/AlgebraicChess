@@ -45,10 +45,18 @@ const NavBar = () => {
               <button
                 className="rounded-xl px-3 py-1.5 text-brand-dark transition hover:bg-brand-hover/60"
                 onClick={() => {
-                  navigate("/game");
+                  navigate("/startGame");
                 }}
               >
                 Start Game
+              </button>
+              <button
+                className="rounded-xl px-3 py-1.5 text-brand-dark transition hover:bg-brand-hover/60"
+                onClick={() => {
+                  navigate("/games");
+                }}
+              >
+                Games
               </button>
               <button
                 className="rounded-xl px-3 py-1.5 text-brand-dark transition hover:bg-brand-hover/60"

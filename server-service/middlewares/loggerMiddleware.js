@@ -1,5 +1,4 @@
-const logger = require('../utils/logger')
-
+const logger = require('../utils/logger').http
 const requests = function (req, res, next) {
   logger.trace(`Incoming request - ${req.method} ${req.url}`)
   res.on('finish', () => {

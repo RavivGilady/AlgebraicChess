@@ -173,6 +173,10 @@ class Game extends EventEmitter {
             ? whitePlayerDetails.userId
             : undefined,
         elo: whitePlayerDetails.elo,
+        username:
+          whitePlayerDetails.username == undefined
+            ? 'Bot Player'
+            : whitePlayerDetails.username,
       },
       black: {
         type: blackPlayerDetails.type,
@@ -181,13 +185,17 @@ class Game extends EventEmitter {
             ? blackPlayerDetails.userId
             : undefined,
         elo: blackPlayerDetails.elo,
+        username:
+          blackPlayerDetails.username == undefined
+            ? 'Bot Player'
+            : blackPlayerDetails.username,
       },
       winner: this.winner
         ? this.winner === this.whitePlayer
           ? 'white'
           : 'black'
         : null,
-      status: this.gameOver ? 'gameOver' : 'active', // need to expand
+      status: this.gameOver ? 'gameOver' : 'active',
       lastActivityAt: new Date(),
       version: 0,
       expiresAt: this.gameOver ? null : new Date(Date.now() + 86400000),

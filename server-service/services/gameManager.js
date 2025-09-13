@@ -37,7 +37,17 @@ const saveGameToDatabase = (gameDetails) => {
     logger.error(`Error saving game ${gameDetails._id} to database: ${error}`)
   }
 }
+const listActiveGamesByUserId = (userId) => {
+  return [...activeGames.entries()]
+    .filter(
+      ([, g]) =>
+        g.whitePlayer.getPlayerDetails().id === userId ||
+        g.blackPlayer.getPlayerDetails().id === userId
+    )
+    .map(([id]) => id)
+}
 module.exports = {
   createGame,
   registerToGame,
+  listActiveGamesByUserId,
 }

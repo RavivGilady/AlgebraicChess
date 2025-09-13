@@ -58,7 +58,9 @@ export const GameProvider = ({ gameId, children }) => {
       console.error(`Connection error: ${err.message}`);
       navigate("/");
     });
-
+    newSocket.on("disconnect", () => {
+      navigate("/games");
+    });
     return () => newSocket.disconnect();
   }, []);
 

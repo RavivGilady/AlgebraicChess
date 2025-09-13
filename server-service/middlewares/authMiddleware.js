@@ -11,10 +11,15 @@ exports.verifyToken = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET)
-    req.userId = decoded.userId
+    req.userId = decoded.id
     next()
   } catch (error) {
     logger.error(`Error was thrown to verify token:${error}`)
     return res.status(401).json({ error: 'Unauthorized' })
   }
+}
+exports.mustOwnResource = (req, res, next) => {
+  if (req.user?.role === 'admin' || req.userId === req.params.userId)
+    return next()
+  next({ status: 403, message: 'Forbidden' })
 }
