@@ -77,12 +77,12 @@ class Game extends EventEmitter {
   }
   endGame() {
     this.status = 'gameOver'
-    this.winner = this.isCheckmate() ? this.currentPlayer : null
+    this.winner = this.isCheckmate() ? this.currentPlayer : undefined
 
     this.emit('gameOver', {
       gameId: this.gameId,
-      result: winner,
-      son: 'checkmate',
+      winner: this.winner,
+      reason: this.isCheckmate() ? 'Checkmate' : 'Draw',
     })
   }
   getNewMove(move) {
