@@ -27,17 +27,13 @@ export default function GamesPage() {
             _id: game._id,
             gameId: game._id,
             opponent:
-              game.white?.userId === user.id
-                ? game.black?.type === "bot"
-                  ? `Bot (${game.black?.elo})`
-                  : `${game.black?.username || "Unknown"} (${game.black?.elo})`
-                : game.white?.type === "bot"
-                  ? `Bot (${game.white?.elo})`
-                  : `${game.white?.username || "Unknown"} (${game.white?.elo})`,
+              game.opponent.type === "human"
+                ? game.opponent.username + " (" + game.opponent.elo + ")"
+                : `Stockfish (${game.opponent.elo})`,
 
-            winner: game.winner,
             status: game.status,
-            lastActivityAt: game.lastActivityAt,
+            lastActivityAt: game.updatedAt,
+            lastMoves: game.moveList,
           }));
           setGames(transformedGames);
         } else {
@@ -74,7 +70,7 @@ export default function GamesPage() {
   return (
     <div className="flex min-h-screen flex-col items-center gap-4 pt-8">
       <h1 className="text-2xl font-bold">Games</h1>
-      
+
       <GameList games={games} />
     </div>
   );

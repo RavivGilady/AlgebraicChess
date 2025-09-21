@@ -13,7 +13,7 @@ import React from "react";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 const BoardDialog = ({ open, onOpenChange }) => {
-  const { gameState } = useGame();
+  const { gameState, color } = useGame();
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -29,6 +29,7 @@ const BoardDialog = ({ open, onOpenChange }) => {
               arePiecesDraggable={false}
               areArrowsAllowed={false}
               position={gameState.board.fen()}
+              boardOrientation={color}
             />
           </div>
         </Card>

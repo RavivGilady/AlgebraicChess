@@ -1,12 +1,24 @@
 import api from "../services/api";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 export default function StartGame() {
   const navigate = useNavigate();
+  const [resumeToken, setResumeToken] = useState(null);
   const handleStartGame = async () => {
-    const response = await api.get("/game/startGameBot", {
-      params: { elo: 2000 },
+    const response = await api.get("/games/startGameBot", {
+      params: { elo: 1300 },
     });
-    navigate(`/game/${response.data.gameId}`);
+    const {
+      gameId: newGameId,
+      opponentElo: oppElo,
+      resumeToken: rt,
+    } = response.data || {};
+    if (newGameId && rt) {
+      navigate(`/game/${newGameId}`);
+      try {
+        sessionStorage.setItem(`resumeToken:${newGameId}`, rt);
+      } catch {}
+    }
   };
 
   return (

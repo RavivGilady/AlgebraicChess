@@ -5,20 +5,13 @@ import {
   useState,
   useCallback,
   useEffect,
-  use,
 } from "react";
 import api from "../services/api"; // Adjust the import path as necessary
+import { decodeJwt } from "@/utils/jwt";
 const AuthContext = createContext(null);
 export const useAuth = () => useContext(AuthContext);
 const serverUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
-function decodeJwt(t) {
-  try {
-    return JSON.parse(atob(t.split(".")[1]));
-  } catch {
-    return null;
-  }
-}
 function isExpired(t, skew = 15) {
   const p = decodeJwt(t);
   return p?.exp ? p.exp * 1000 - Date.now() <= skew * 1000 : false;

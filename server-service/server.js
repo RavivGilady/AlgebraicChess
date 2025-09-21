@@ -5,15 +5,14 @@ const http = require('http')
 const server = http.createServer(app)
 const { connectDb } = require('./config/db')
 const loggingMiddleware = require('./middlewares/loggerMiddleware')
-const { startBotMovesConsumer } = require('./services/botPlayManager')
+const { startBotMovesConsumer } = require('./services/kafkaConsumer')
 
 const PORT = process.env.PORT || 5000
 const authRoutes = require('./routes/authRoutes')
 const gameRoutes = require('./routes/gameRoutes')
 const userRoutes = require('./routes/userRoutes')
 const logger = require('./utils/logger')
-const { io } = require('./utils/socketsStore')
-
+const createGateway = require('./gateway/websocket')
 const cors = require('cors')
 
 app.use(express.json())
@@ -31,10 +30,10 @@ app.use(
   })
 )
 app.use('/auth', authRoutes)
-app.use('/game', gameRoutes)
+app.use('/games', gameRoutes)
 app.use('/user', userRoutes)
 
-io.attach(server)
+createGateway(server)
 
 server.listen(PORT, '0.0.0.0', () => {
   logger.info(`listening on *:${PORT}`)

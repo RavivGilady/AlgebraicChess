@@ -15,7 +15,7 @@ function Auth({ mode }) {
     if (mode === "login") {
       const r = await login(username, password);
       if (r.ok) {
-        navigate("/game");
+        navigate("/startGame");
       } else {
         setMessage(r.error || "Login failed.");
       }

@@ -1,21 +1,17 @@
-const GameHistory = require('../models/GameHistory')
+const getFilteredUserGames = require('../services/getUserGames')
 const logger = require('../utils/logger')
 
 const getUserGames = async (req, res) => {
   try {
     const { userId } = req.params
 
-    const games = await GameHistory.find({
-      $or: [{ 'white.userId': userId }, { 'black.userId': userId }],
-    })
-      .sort({ lastActivityAt: -1 })
-      .select('_id white black winner status lastActivityAt snapshot.version')
+    const activeGames = await getFilteredUserGames(userId)
 
-    logger.info(`Retrieved ${games.length} games for user ${userId}`)
+    logger.info(`Retrieved ${activeGames.length} games for user ${userId}`)
 
     res.json({
       success: true,
-      games: games,
+      games: activeGames,
     })
   } catch (error) {
     logger.error(

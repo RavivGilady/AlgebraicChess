@@ -13,16 +13,17 @@ export default function GameList({ games }) {
         <TableHeader>
           <TableRow>
             <TableHead>Opponent</TableHead>
-            <TableHead>Winner</TableHead>
-            <TableHead>Status</TableHead>
+            <TableHead>Last Moves</TableHead>
             <TableHead>Last Activity</TableHead>
             <TableHead></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {games.map((game) => (
-            <GameRow key={game._id} game={game} />
-          ))}
+          {games.map(
+            (game) => (
+              (<GameRow key={game._id} game={game} />)
+            ),
+          )}
         </TableBody>
       </Table>
     </div>

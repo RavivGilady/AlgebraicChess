@@ -11,7 +11,7 @@ const kafka = new Kafka({
 const producer = kafka.producer()
 let isConnected = false
 
-exports.sendMoveResult = async ({ move, moveId }) => {
+exports.sendMoveResult = async ({ gameId, moveId, color, move }) => {
   if (!isConnected) {
     await producer.connect()
     isConnected = true
@@ -21,8 +21,8 @@ exports.sendMoveResult = async ({ move, moveId }) => {
     topic: 'bot.move.result',
     messages: [
       {
-        key: moveId,
-        value: JSON.stringify({ moveId, move }),
+        key: `gameId:${gameId}:moveId:${moveId}`,
+        value: JSON.stringify({ gameId, moveId, color, move }),
       },
     ],
   })

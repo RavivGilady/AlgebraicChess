@@ -1,25 +1,15 @@
 import React from "react";
 import { TableRow, TableCell } from "@/components/ui/table";
 import { useNavigate } from "react-router-dom";
+import { getRelativeTime } from "@/utils/timeUtils";
+import { formatLastPlies } from "@/utils/movesUtils";
 const GameRow = ({ game }) => {
   const navigate = useNavigate();
   return (
     <TableRow>
       <TableCell>{game.opponent}</TableCell>
-      <TableCell>{game.winner}</TableCell>
-
-      <TableCell>{game.status}</TableCell>
-      <TableCell>
-        {game.lastActivityAt
-          ? new Date(game.lastActivityAt).toLocaleString(undefined, {
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-              hour: "2-digit",
-              minute: "2-digit",
-            })
-          : ""}
-      </TableCell>
+      <TableCell>{formatLastPlies(game.lastMoves)}</TableCell>
+      <TableCell>{getRelativeTime(game.lastActivityAt)}</TableCell>
       <TableCell>
         {game.status === "active" ? (
           <button

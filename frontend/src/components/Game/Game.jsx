@@ -8,7 +8,7 @@ const Game = () => {
   const [gameId, setGameId] = useState(null);
   const [opponentElo, setOpponentElo] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-
+  const [resumeToken, setResumeToken] = useState(null);
   useEffect(() => {
     if (!isDialogOpen) return;
 
@@ -16,16 +16,27 @@ const Game = () => {
       setIsDialogOpen(false);
     }, 2000);
 
-    return () => clearTimeout(timer); // Reset timer on repeated opens
+    return () => clearTimeout(timer);
   }, [isDialogOpen]);
 
-    const handleStartGame = async () => {
-      const response = await api.get("/game/startGameBot", {
-        params: { elo: 2000 },
-      });
-      setGameId(response.data.gameId);
-      setOpponentElo(response.data.elo);
-    };
+  const handleStartGame = async () => {
+    const response = await api.get("/games/startGameBot", {
+      params: { elo: 1300 },
+    });
+    const {
+      gameId: newGameId,
+      opponentElo: oppElo,
+      resumeToken: rt,
+    } = response.data || {};
+    if (newGameId && rt) {
+      try {
+        sessionStorage.setItem(`resumeToken:${newGameId}`, rt);
+      } catch {}
+      setResumeToken(rt);
+    }
+    // setGameId(newGameId);
+    setOpponentElo(oppElo);
+  };
 
   return (
     <div className="min-h-screen w-full">
@@ -39,7 +50,12 @@ const Game = () => {
           </button>
         </div>
       ) : (
-        <GameProvider key={gameId} gameId={gameId} opponentElo={opponentElo}>
+        <GameProvider
+          key={gameId}
+          gameId={gameId}
+          opponentElo={opponentElo}
+          resumeToken={resumeToken}
+        >
           <GameLayout
             handleStartGame={handleStartGame}
             openDialog={() => setIsDialogOpen(true)}
