@@ -7,27 +7,32 @@ const {
   GetSecretValueCommand,
 } = require('@aws-sdk/client-secrets-manager')
 
-const REGION = process.env.AWS_REGION || 'us-east-1',
+const REGION = process.env.AWS_REGION || 'us-east-1'
 const SECRET_ID = process.env.SECRET_ID || 'resume'
 const secret_name = 'resume'
 
-const sm = new SecretsManagerClient({ region: REGION });
+const sm = new SecretsManagerClient({ region: REGION })
 
-let cache = { value: null, expiresAt: 0 };
-const CACHE_TTL_MS = 15 * 60 * 1000; // 15m — keep << rotation interval
+let cache = { value: null, expiresAt: 0 }
+const CACHE_TTL_MS = 15 * 60 * 1000
 const secret = getSecret()
 async function getSecret() {
-  const now = Date.now();
-  if (cache.value && now < cache.expiresAt) return cache.value;
+  const now = Date.now()
+  if (cache.value && now < cache.expiresAt) return cache.value
 
-  const resp = await sm.send(new GetSecretValueCommand({ SecretId: SECRET_ID }));
-  const raw = resp.SecretString ?? Buffer.from(resp.SecretBinary).toString('utf8');
+  const resp = await sm.send(new GetSecretValueCommand({ SecretId: SECRET_ID }))
+  const raw =
+    resp.SecretString ?? Buffer.from(resp.SecretBinary).toString('utf8')
 
-  let parsed;
-  try { parsed = JSON.parse(raw); } catch { parsed = { value: raw }; }
+  let parsed
+  try {
+    parsed = JSON.parse(raw)
+  } catch {
+    parsed = { value: raw }
+  }
 
-  cache = { value: parsed, expiresAt: now + CACHE_TTL_MS };
-  return parsed;
+  cache = { value: parsed, expiresAt: now + CACHE_TTL_MS }
+  return parsed
 }
 
 function verifyResumeToken(token) {
