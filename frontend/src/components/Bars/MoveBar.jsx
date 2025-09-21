@@ -21,10 +21,10 @@ const MoveBar = () => {
     let whiteMove = null;
 
     for (let i = 0; i < gameState.moves.length; i++) {
-      const { color, move } = gameState.moves[i];
-      if (color === "white") {
+      const move = gameState.moves[i];
+      if (whiteMove === null) {
         whiteMove = `${moveNum}. ${move}`;
-      } else if (color === "black" && whiteMove) {
+      } else {
         result.push(`${whiteMove} ${move}`);
         whiteMove = null;
         moveNum++;

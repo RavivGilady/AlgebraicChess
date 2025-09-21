@@ -43,3 +43,23 @@ module.exports = {
   error: (message) => logMessage('error', message),
   warn: (message) => logMessage('warn', message),
 }
+
+const httpLogStream = fs.createWriteStream(path.join(logDir, 'http.log'), {
+  flags: 'a',
+})
+
+function logHttpMessage(level, message) {
+  if (process.env.LOG_LEVEL === level || true) {
+    const logEntry = `${getIsraelTimestamp()} - ${message}\n`
+    httpLogStream.write(logEntry)
+  }
+}
+
+const httpLogger = {
+  trace: (message) => logHttpMessage('trace', message),
+  info: (message) => logHttpMessage('info', message),
+  error: (message) => logHttpMessage('error', message),
+  warn: (message) => logHttpMessage('warn', message),
+}
+
+module.exports.http = httpLogger

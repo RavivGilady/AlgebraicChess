@@ -23,10 +23,10 @@ exports.startConsumer = async () => {
           `[BotService] Processing move request: ${JSON.stringify(JSON.parse(message.value))}`
         )
 
-        const { moveId, elo, fen } = JSON.parse(message.value)
+        const { gameId, moveId, color, fen, elo } = JSON.parse(message.value)
         const move = await runStockfish(elo, fen)
 
-        await sendMoveResult({ moveId, move })
+        await sendMoveResult({ gameId, moveId, color, move })
       } catch (err) {
         logger.error('[BotService] Error processing move request:', err.message)
       }

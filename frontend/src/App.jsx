@@ -1,12 +1,12 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Auth from "./components/Auth/Auth";
 import Home from "./components/Home/Home";
-import Game from "./components/Game/Game";
 import AppLayout from "./components/Layout/AppLayout";
 import PrivateRoute from "./components/Routes/PrivateRoute";
-import { Navigate, useLocation } from "react-router-dom";
 import UnauthenticatedRoute from "./components/Routes/UnauthenticatedRoute";
-
+import GamesPage from "./pages/GamesPage";
+import StartGame from "./pages/StartGame";
+import ActiveGame from "./pages/ActiveGame";
 function App() {
   return (
     <Router>
@@ -21,7 +21,9 @@ function App() {
           </Route>
           {/* Protected routes */}
           <Route element={<PrivateRoute />}>
-            <Route path="/game" element={<Game />} />
+            <Route path="/startGame" element={<StartGame />} />
+            <Route path="/games" element={<GamesPage />} />
+            <Route path="/game/:gameId" element={<ActiveGame />} />
           </Route>
           {/* Catch-all */}
           {/* <Route path="*" element={<NotFound />} /> */}
@@ -30,8 +32,5 @@ function App() {
     </Router>
   );
 }
-function RedirectToGame() {
-  const location = useLocation();
-  return <Navigate to="/game" replace />;
-}
+
 export default App;

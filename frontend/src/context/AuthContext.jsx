@@ -5,20 +5,13 @@ import {
   useState,
   useCallback,
   useEffect,
-  use,
 } from "react";
 import api from "../services/api"; // Adjust the import path as necessary
+import { decodeJwt } from "@/utils/jwt";
 const AuthContext = createContext(null);
 export const useAuth = () => useContext(AuthContext);
 const serverUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
-function decodeJwt(t) {
-  try {
-    return JSON.parse(atob(t.split(".")[1]));
-  } catch {
-    return null;
-  }
-}
 function isExpired(t, skew = 15) {
   const p = decodeJwt(t);
   return p?.exp ? p.exp * 1000 - Date.now() <= skew * 1000 : false;
@@ -27,8 +20,14 @@ function isExpired(t, skew = 15) {
 export function AuthProvider({ children }) {
   const [token, setToken] = useState(() => localStorage.getItem("jwtToken"));
   const claims = useMemo(() => (token ? decodeJwt(token) : null), [token]);
-  const user = claims ? { username: claims.username } : null;
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const user = claims
+    ? {
+        username: claims.username,
+        id: claims.id,
+        elo: claims.elo,
+      }
+    : null;
+  const isAuthenticated = useMemo(() => !!token && !isExpired(token), [token]);
   const [isLoading, setIsLoading] = useState(false);
   const setAndStoreToken = useCallback((t) => {
     if (t) {
@@ -95,21 +94,17 @@ export function AuthProvider({ children }) {
       const expiresAt = payload?.exp ? payload.exp * 1000 : 0;
 
       if (expiresAt > Date.now()) {
-        setIsAuthenticated(true);
         setIsLoading(false);
 
         // schedule auto-logout
         timeoutId = setTimeout(() => {
           console.log("Token expired, logging out");
-          setIsAuthenticated(false);
           localStorage.removeItem("jwtToken");
           setToken(null);
         }, expiresAt - Date.now());
       } else {
-        setIsAuthenticated(false);
       }
     } else {
-      setIsAuthenticated(false);
     }
 
     return () => clearTimeout(timeoutId);

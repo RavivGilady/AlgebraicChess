@@ -3,61 +3,35 @@ const mongoose = require('mongoose')
 const PlayerSchema = new mongoose.Schema(
   {
     type: { type: String, enum: ['human', 'bot'], required: true },
-    userId: {
-      type: String,
-      required: function () {
-        return this.type === 'human'
-      },
-    },
-
-    elo: {
-      type: Number,
-      required: true,
-      min: 0,
-    },
+    userId: { type: String },
+    elo: { type: Number },
   },
-  { _id: false, minimize: true }
+  { _id: false }
 )
 
-const gameHistorySchema = new mongoose.Schema({
-  _id: { type: String, required: true }, // use gameId
+const GameHistorySchema = new mongoose.Schema({
+  gameId: { type: String, required: true, index: true, unique: true },
 
-  white: { type: PlayerSchema, required: true },
-  black: { type: PlayerSchema, required: true },
+  players: {
+    white: { type: PlayerSchema, required: true },
+    black: { type: PlayerSchema, required: true },
+  },
 
+  moves: { type: [String], required: true }, // SAN or LAN, whatever you store
   winner: {
     type: String,
     enum: ['white', 'black', 'draw', null],
     default: null,
   },
 
-  status: {
-    type: String,
-    enum: [
-      'active',
-      'checkmate',
-      'draw',
-      'resign',
-      'timeout',
-      'abandoned',
-      'gameOver',
-    ],
-    default: 'active',
-    index: true,
-  },
+  startedAt: { type: Date, required: true },
+  endedAt: { type: Date, required: true },
 
-  lastActivityAt: { type: Date, default: () => new Date(), index: true },
-  expiresAt: { type: Date, index: true }, // null/absent means no TTL sweep
-
-  snapshot: {
-    moves: { type: [String], default: [] }, // ← safer
-    fen: { type: String, required: true },
-    turn: { type: String, enum: ['w', 'b'], required: true },
-  },
-
-  version: { type: Number, default: 0 },
+  createdAt: { type: Date, default: Date.now },
 })
 
-gameHistorySchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 })
+// Optional: indexes for analytics
+GameHistorySchema.index({ 'players.userId': 1 })
+GameHistorySchema.index({ endedAt: -1 })
 
-module.exports = mongoose.model('GameHistory', gameHistorySchema)
+module.exports = mongoose.model('GameHistory', GameHistorySchema)

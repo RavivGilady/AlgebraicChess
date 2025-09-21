@@ -18,12 +18,6 @@ const BottomBar = ({ handleStartGame, openDialog }) => {
         >
           Peek Board
         </button>
-        <button
-          onClick={handleStartGame}
-          className="rounded-xl bg-brand-dark px-4 py-2 text-white shadow transition hover:bg-brand-hover"
-        >
-          Restart Game
-        </button>
       </div>
     </Card>
   );

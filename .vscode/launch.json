@@ -2,20 +2,33 @@
     "version": "0.2.0",
     "configurations": [
       {
+        "name": "Debug Server Service",
+        "type": "node",
+        "request": "launch",
+        "program": "${workspaceFolder}/server-service/server.js",
+        "cwd": "${workspaceFolder}/server-service",
+        "env": {
+          "NODE_ENV": "development"
+        },
+        "console": "integratedTerminal",
+        "restart": true,
+        "runtimeArgs": ["--inspect"]
+      },
+      {
         "name": "Attach to Backend",
         "type": "node",
         "request": "attach",
         "port": 9230,
-        "restart": true
+        "restart": true,
       },
-        {
-      "name": "Chrome Debug",
-      "type": "chrome",
-      "request": "launch",
-      "url": "http://localhost:3000",
-      "webRoot": "${workspaceFolder}/src"
-    },
-    {
+      {
+        "name": "Chrome Debug",
+        "type": "chrome",
+        "request": "launch",
+        "url": "http://localhost:3000",
+        "webRoot": "${workspaceFolder}/src"
+      },
+      {
         "name": "Attach to bot-service",
         "type": "node",
         "request": "attach",

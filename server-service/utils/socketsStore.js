@@ -30,6 +30,9 @@ io.use((socket, next) => {
     logger.error(
       `User ${JSON.stringify(user)} created socket for game id ${gameId} `
     )
+    logger.info(
+      `User ${JSON.stringify(user)} created socket for game id ${gameId} `
+    )
     socket.user = user
     socket.gameId = gameId
     next()
@@ -37,6 +40,9 @@ io.use((socket, next) => {
 })
 
 io.on('connection', (socket) => {
+  logger.info(
+    `User ${JSON.stringify(socket.user)} connected to game id ${socket.gameId}`
+  )
   registerAsPlayer(
     socket.user.username,
     socket.user.id,

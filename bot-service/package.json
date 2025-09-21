@@ -8,6 +8,12 @@
     "debug": "nodemon --inspect=9231 index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "nodemonConfig": {
+    "ignore": [
+      "logs/*.log",
+      "stockfishBinary/*"
+    ]
+  },
   "author": "Raviv Gilady",
   "license": "ISC",
   "dependencies": {
