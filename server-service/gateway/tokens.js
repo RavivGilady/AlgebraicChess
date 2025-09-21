@@ -1,11 +1,37 @@
 const jwt = require('jsonwebtoken')
 const { v4: uuidv4 } = require('uuid')
-const SECRET = process.env.RESUME_JWT_SECRET
 const store = require('../state/MongoActiveGamesStore')
-
 const logger = require('../utils/logger')
+const {
+  SecretsManagerClient,
+  GetSecretValueCommand,
+} = require('@aws-sdk/client-secrets-manager')
+
+const REGION = process.env.AWS_REGION || 'us-east-1',
+const SECRET_ID = process.env.SECRET_ID || 'resume'
+const secret_name = 'resume'
+
+const sm = new SecretsManagerClient({ region: REGION });
+
+let cache = { value: null, expiresAt: 0 };
+const CACHE_TTL_MS = 15 * 60 * 1000; // 15m — keep << rotation interval
+const secret = getSecret()
+async function getSecret() {
+  const now = Date.now();
+  if (cache.value && now < cache.expiresAt) return cache.value;
+
+  const resp = await sm.send(new GetSecretValueCommand({ SecretId: SECRET_ID }));
+  const raw = resp.SecretString ?? Buffer.from(resp.SecretBinary).toString('utf8');
+
+  let parsed;
+  try { parsed = JSON.parse(raw); } catch { parsed = { value: raw }; }
+
+  cache = { value: parsed, expiresAt: now + CACHE_TTL_MS };
+  return parsed;
+}
+
 function verifyResumeToken(token) {
-  return jwt.verify(token, SECRET)
+  return jwt.verify(token, secret)
 }
 
 function newSeatSession({ gameId, userIdOrBot, color }) {
@@ -13,7 +39,7 @@ function newSeatSession({ gameId, userIdOrBot, color }) {
   const jti = uuidv4()
 
   const claims = { gameId, userId: userIdOrBot, color, sessionId, jti }
-  const token = jwt.sign(claims, SECRET, {
+  const token = jwt.sign(claims, secret, {
     algorithm: 'HS256',
     expiresIn: '15m',
   })
@@ -21,7 +47,7 @@ function newSeatSession({ gameId, userIdOrBot, color }) {
 }
 
 function signWith({ gameId, userId, color, sessionId, jti }) {
-  return jwt.sign({ gameId, userId, color, sessionId, jti }, SECRET, {
+  return jwt.sign({ gameId, userId, color, sessionId, jti }, secret, {
     algorithm: 'HS256',
     expiresIn: '15m',
   })
