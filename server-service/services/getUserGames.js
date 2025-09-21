@@ -10,8 +10,8 @@ module.exports = async function getFilteredUserGames(userId) {
     opponent.userId = undefined
     opponent.color = game.players.white.userId === userId ? 'black' : 'white'
 
-    if (opponent === 'human') {
-      const opponentUser = await User.findById(game.opponent.userId).select(
+    if (opponent.type === 'human') {
+      const opponentUser = await User.findById(opponent.userId).select(
         'username'
       )
       opponent.username = opponentUser.username
