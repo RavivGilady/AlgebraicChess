@@ -22,6 +22,9 @@ jobs:
           script: |
             cd /home/ubuntu/AlgebraicChess
             docker compose -f infra/docker-compose.yml down
+            docker volume rm $(docker volume ls -q)
+            docker container rm $(docker container ls -q)
+            docker image rm $(docker image ls -q)
             git pull origin master
             docker compose -f infra/docker-compose.yml build --no-cache
             docker compose -f infra/docker-compose.yml up -d
