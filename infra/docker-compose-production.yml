@@ -45,7 +45,7 @@ services:
       - MONGO_URI=mongodb://mongodb:27017/chess_app
       - AWS_REGION=us-east-1
       - SECRET_ID=resume
-      - NODE_ENV=development
+      - NODE_ENV=production
 
     env_file:
       - .env.server-service
