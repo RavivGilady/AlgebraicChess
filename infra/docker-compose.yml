@@ -43,6 +43,8 @@ services:
       - PORT=5000
       - KAFKA_BROKERS=kafka:9092
       - MONGO_URI=mongodb://mongodb:27017/chess_app
+      - AWS_REGION=us-east-1
+      - SECRET_ID=resume
 
     env_file:
       - .env.server-service

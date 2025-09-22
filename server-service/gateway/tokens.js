@@ -2,67 +2,47 @@ const jwt = require('jsonwebtoken')
 const { v4: uuidv4 } = require('uuid')
 const store = require('../state/MongoActiveGamesStore')
 const logger = require('../utils/logger')
-const {
-  SecretsManagerClient,
-  GetSecretValueCommand,
-} = require('@aws-sdk/client-secrets-manager')
+const { loadConfig } = require('../utils/secrets')
 
-const REGION = process.env.AWS_REGION || 'us-east-1'
-const SECRET_ID = process.env.SECRET_ID || 'resume'
-const secret_name = 'resume'
+let RESUME_JWT_SECRET, JWT_SECRET
 
-const sm = new SecretsManagerClient({ region: REGION })
-
-let cache = { value: null, expiresAt: 0 }
-const CACHE_TTL_MS = 15 * 60 * 1000
-const secret = getSecret()
-async function getSecret() {
-  const now = Date.now()
-  if (cache.value && now < cache.expiresAt) return cache.value
-
-  const resp = await sm.send(new GetSecretValueCommand({ SecretId: SECRET_ID }))
-  const raw =
-    resp.SecretString ?? Buffer.from(resp.SecretBinary).toString('utf8')
-
-  let parsed
-  try {
-    parsed = JSON.parse(raw)
-  } catch {
-    parsed = { value: raw }
-  }
-
-  cache = { value: parsed, expiresAt: now + CACHE_TTL_MS }
-  return parsed
+;(async () => {
+  const config = await loadConfig()
+  RESUME_JWT_SECRET = config.RESUME_JWT_SECRET
+  JWT_SECRET = config.JWT_SECRET
+})()
+async function verifyResumeToken(token) {
+  return jwt.verify(token, RESUME_JWT_SECRET)
 }
 
-function verifyResumeToken(token) {
-  return jwt.verify(token, secret)
-}
-
-function newSeatSession({ gameId, userIdOrBot, color }) {
+async function newSeatSession({ gameId, userIdOrBot, color }) {
   const sessionId = uuidv4()
   const jti = uuidv4()
 
   const claims = { gameId, userId: userIdOrBot, color, sessionId, jti }
-  const token = jwt.sign(claims, secret, {
+  const token = jwt.sign(claims, RESUME_JWT_SECRET, {
     algorithm: 'HS256',
     expiresIn: '15m',
   })
   return { sessionId, jti, token }
 }
 
-function signWith({ gameId, userId, color, sessionId, jti }) {
-  return jwt.sign({ gameId, userId, color, sessionId, jti }, secret, {
-    algorithm: 'HS256',
-    expiresIn: '15m',
-  })
+async function signWith({ gameId, userId, color, sessionId, jti }) {
+  return jwt.sign(
+    { gameId, userId, color, sessionId, jti },
+    RESUME_JWT_SECRET,
+    {
+      algorithm: 'HS256',
+      expiresIn: '15m',
+    }
+  )
 }
 
 async function rotateToken({ gameId, color, userId }) {
   await store.update(gameId, { [`session.${color}.jti`]: uuidv4() })
 
   logger.info(`Rotating token for game ${gameId} and color ${color}`)
-  return generateToken(gameId, userId)
+  return await generateToken(gameId, userId)
 }
 async function generateToken(gameId, userId) {
   const row = await store.get(gameId)
