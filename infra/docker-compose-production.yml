@@ -61,7 +61,7 @@ services:
       kafka:
         condition: service_healthy
   secret-checker:
-    image: amazon/aws-cli:2
+    image: amazon/aws-cli:latest
     command: >
       sh -c '
         echo "Fetching secret $SECRET_ID from $AWS_REGION";
