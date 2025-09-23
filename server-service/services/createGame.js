@@ -6,12 +6,12 @@ const { newSeatSession } = require('../gateway/tokens')
 const engineMeta = require('./engineMeta')
 const logger = require('../utils/logger')
 module.exports = async function createGame({ gameId, white, black }) {
-  const wSess = newSeatSession({
+  const wSess = await newSeatSession({
     gameId,
     userIdOrBot: white.userId ?? 'bot',
     color: 'white',
   })
-  const bSess = newSeatSession({
+  const bSess = await newSeatSession({
     gameId,
     userIdOrBot: black.userId ?? 'bot',
     color: 'black',

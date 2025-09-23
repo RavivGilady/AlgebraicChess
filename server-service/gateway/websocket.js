@@ -25,9 +25,11 @@ module.exports = function createGateway(httpServer) {
   io.use(async (socket, next) => {
     try {
       const token = socket.handshake.auth?.resumeToken
-      const payload = verifyResumeToken(token)
+      const payload = await verifyResumeToken(token)
       const row = await ActiveGames.get(payload.gameId)
-      if (!row) return next(new Error('GAME_NOT_FOUND'))
+      if (!row) {
+        return next(new Error('GAME_NOT_FOUND'))
+      }
       if (
         row.session[payload.color].jti !== payload.jti ||
         row.session[payload.color].sessionId !== payload.sessionId

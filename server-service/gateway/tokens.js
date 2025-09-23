@@ -15,7 +15,7 @@ async function verifyResumeToken(token) {
   return jwt.verify(token, RESUME_JWT_SECRET)
 }
 
-async function newSeatSession({ gameId, userIdOrBot, color }) {
+function newSeatSession({ gameId, userIdOrBot, color }) {
   const sessionId = uuidv4()
   const jti = uuidv4()
 
