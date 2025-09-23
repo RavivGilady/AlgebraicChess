@@ -27,7 +27,7 @@ async function loadConfig() {
   const raw =
     resp.SecretString ?? Buffer.from(resp.SecretBinary).toString('utf8')
   cache = JSON.parse(raw)
-
+  logger.info('temp: secret resume is:', JSON.stringify(cache))
   return cache
 }
 
