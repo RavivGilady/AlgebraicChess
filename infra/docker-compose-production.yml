@@ -61,20 +61,10 @@ services:
       kafka:
         condition: service_healthy
   secret-checker:
-    image: amazon/aws-cli:latest
-    command: >
-      sh -c '
-        echo "Fetching secret $SECRET_ID from $AWS_REGION";
-        aws secretsmanager get-secret-value \
-          --secret-id "$SECRET_ID" \
-          --region "$AWS_REGION" \
-          --query SecretString \
-          --output text
-      '
+    build: ./test-aws
     environment:
       - SECRET_ID=resume
       - AWS_REGION=us-east-1
-    restart: "no"
 
 volumes:
   mongodb_data:
