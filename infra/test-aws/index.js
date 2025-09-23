@@ -1,7 +1,7 @@
-import {
+const {
   SecretsManagerClient,
   GetSecretValueCommand,
-} from "@aws-sdk/client-secrets-manager";
+} = require("@aws-sdk/client-secrets-manager");
 
 const SECRET_ID = process.env.SECRET_ID; // e.g., "my/service/jwt"
 const AWS_REGION = process.env.AWS_REGION; // e.g., "eu-central-1"
