@@ -13,8 +13,14 @@ const limiter = rateLimit({
   message: 'Too many requests, please try again later.',
 })
 
+const limiterForGuest = rateLimit({
+  windowMs: 30 * 60 * 1000, // 30 minutes
+  max: 10,
+  message: 'Too many requests, please try again later.',
+})
+
 router.post('/register', limiter, registerUser)
 router.post('/login', limiter, loginUser)
-router.get('/loginAsGuest', limiter, loginGuest)
+router.get('/loginAsGuest', limiterForGuest, loginGuest)
 
 module.exports = router

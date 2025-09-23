@@ -15,6 +15,8 @@ const logger = require('./utils/logger')
 const createGateway = require('./gateway/websocket')
 const cors = require('cors')
 
+app.set('trust proxy', 1);
+
 app.use(express.json())
 app.use(loggingMiddleware.logHttpRequests)
 app.use(
