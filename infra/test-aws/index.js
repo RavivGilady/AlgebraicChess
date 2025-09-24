@@ -24,9 +24,8 @@ async function main() {
     }
 
     console.log("✅ Secret fetched successfully:");
-    console.log(
-      `the buffer binary is: ${Buffer.from(res.SecretBinary).toString("utf8")}`
-    );
+    const parsed = JSON.parse(res.SecretString);
+    console.log(`the parsed is: ${JSON.stringify(parsed.RESUME_JWT_SECRET)}`);
   } catch (err) {
     console.error("❌ Failed to fetch secret:", err.message);
     process.exit(1);
