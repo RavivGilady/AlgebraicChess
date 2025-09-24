@@ -24,9 +24,7 @@ async function loadConfig() {
 
   const sm = new SecretsManagerClient({ region })
   const resp = await sm.send(new GetSecretValueCommand({ SecretId: secretId }))
-  const raw =
-    resp.SecretString ?? Buffer.from(resp.SecretBinary).toString('utf8')
-  cache = JSON.parse(raw)
+  cache = JSON.parse(resp.SecretString)
   logger.info('temp: secret resume is:', JSON.stringify(cache))
   return cache
 }

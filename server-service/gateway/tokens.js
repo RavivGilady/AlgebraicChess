@@ -5,7 +5,6 @@ const logger = require('../utils/logger')
 const { loadConfig } = require('../utils/secrets')
 
 let RESUME_JWT_SECRET, JWT_SECRET
-
 ;(async () => {
   const config = await loadConfig()
   RESUME_JWT_SECRET = config.RESUME_JWT_SECRET
