@@ -1,14 +1,19 @@
 const { Kafka } = require('kafkajs')
 const logger = require('../utils/logger')
-
-const kafka = new Kafka({
+let producer = null
+let kafka = null
+const isProduction = process.env.NODE_ENV === 'production'
+if(isProduction) {
+  kafka = new Kafka({
   clientId: 'game-server-producer',
   brokers: process.env.KAFKA_BROKERS
     ? process.env.KAFKA_BROKERS.split(',')
     : ['localhost:9092'],
 })
+producer = kafka.producer()
 
-const producer = kafka.producer()
+}
+
 let isConnected = false
 
 async function connect() {
@@ -19,7 +24,7 @@ async function connect() {
   }
 }
 
-async function sendMoveRequest({ gameId, moveId, color, fen, elo }) {
+async function sendMoveRequestViaKafka({ gameId, moveId, color, fen, elo }) {
   await connect()
 
   try {
@@ -50,7 +55,7 @@ async function disconnect() {
 }
 
 module.exports = {
-  sendMoveRequest,
+  sendMoveRequest: sendMoveRequestViaKafka,
   connect,
   disconnect,
 }

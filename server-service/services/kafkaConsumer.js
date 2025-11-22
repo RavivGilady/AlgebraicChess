@@ -2,12 +2,17 @@ const { Kafka } = require('kafkajs')
 const logger = require('../utils/logger')
 const { loadGame } = require('./gameLoaderFromDBtoMemory')
 
-const kafka = new Kafka({
-  clientId: 'game-server-consumer',
-  brokers: process.env.KAFKA_BROKERS
-    ? process.env.KAFKA_BROKERS.split(',')
-    : ['localhost:9092'],
-})
+
+
+const isProduction = process.env.NODE_ENV === 'production'
+
+let kafka = null
+if(isProduction) {
+  kafka = new Kafka({
+    clientId: 'game-server-consumer',
+    brokers: process.env.KAFKA_BROKERS.split(',')
+  })
+}
 
 let consumer = null
 

@@ -5,7 +5,7 @@ const http = require('http')
 const server = http.createServer(app)
 const { connectDb } = require('./config/db')
 const loggingMiddleware = require('./middlewares/loggerMiddleware')
-const { startBotMovesConsumer } = require('./services/kafkaConsumer')
+const { startCommunicationHandler, sendMoveRequest } = require('./services/communicationHandler')
 
 const PORT = process.env.PORT || 5000
 const authRoutes = require('./routes/authRoutes')
@@ -41,17 +41,12 @@ server.listen(PORT, '0.0.0.0', () => {
   logger.info(`listening on *:${PORT}`)
 })
 
-connectDb()
-  .then(() => logger.info('Database connected successfully!!'))
+// connectDb()
+//   .then(() => logger.info('Database connected successfully!!'))
 
-  .catch((err) => {
-    logger.error(`Database connection failed:, ${err}`)
-    process.exit(1)
-  })
+//   .catch((err) => {
+//     logger.error(`Database connection failed:, ${err}`)
+//     process.exit(1)
+//   })
 
-startBotMovesConsumer()
-  .then(() => logger.info('BotPlayManager is ready'))
-  .catch((err) => {
-    logger.error('BotPlayManager startup failed:', err.message)
-    process.exit(1)
-  })
+startCommunicationHandler(app,PORT)

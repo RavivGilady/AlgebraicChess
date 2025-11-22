@@ -24,6 +24,10 @@ exports.startConsumer = async () => {
         )
 
         const { gameId, moveId, color, fen, elo } = JSON.parse(message.value)
+        //create a mock obejct: { gameId, moveId, color, fen, elo }, make attribute enclosed by quotes as a ready object
+
+
+        const mockObject = { "gameId": "123", "moveId": "1", "color": "white", "fen": 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', "elo": 1000 }
         const move = await runStockfish(elo, fen)
 
         await sendMoveResult({ gameId, moveId, color, move })
